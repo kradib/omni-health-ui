@@ -57,7 +57,7 @@ const Login = () => {
                             }}
                         >
                             <Typography variant="subtitle1">
-                                <Link href="#" underline="none">
+                                <Link href="/forgot-password" underline="none">
                                     Forgot Password?
                                 </Link>
                             </Typography>
