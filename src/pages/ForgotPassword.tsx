@@ -3,10 +3,10 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { validateEmail } from "../utils/Utils";
 import { RESEND_ATTEMPTS, RESEND_TIME_INTERVAL } from "../Constants";
-
+import Modal from '@mui/material/Modal';
 const sendVerificationCode = (
     email: String,
     setEmail: React.Dispatch<React.SetStateAction<string>>,
@@ -55,7 +55,8 @@ const verifyCode = (
     setSeconds: React.Dispatch<React.SetStateAction<number>>,
     resendAttempts: number,
     setResendAttempts: React.Dispatch<React.SetStateAction<number>>,
-    email: String
+    email: String,
+    setIsVerificationCodeSubmitted: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     return (
         <>
@@ -79,6 +80,7 @@ const verifyCode = (
                     disabled={!(verificationCode.length > 0)}
                     onClick={() => {
                         console.log("Verification code: " + verificationCode);
+                        setIsVerificationCodeSubmitted(true);
                     }}
                     size="large"
                 >
@@ -118,6 +120,12 @@ const ForgotPassword = () => {
     const [verificationCode, setVerificationCode] = useState("");
     const [seconds, setSeconds] = useState(0);
     const [resendAttempts, setResendAttempts] = useState(0);
+    const [isVerificationCodeSubmitted, setIsVerificationCodeSubmitted] =
+        useState(false);
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isPasswordChangeSuccessful, setIsPasswordChangeSuccessful] =
+        useState(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -134,6 +142,78 @@ const ForgotPassword = () => {
             clearInterval(interval);
         };
     });
+
+    const changePassword = (
+        email: string,
+        verificationCode: string,
+        password: string,
+        setPassword: Dispatch<SetStateAction<string>>,
+        confirmPassword: string,
+        setConfirmPassword: Dispatch<SetStateAction<string>>,
+        isPasswordChangeSuccessful: boolean,
+        setIsPasswordChangeSuccessful: Dispatch<SetStateAction<boolean>>
+    ) => {
+        return (
+            <>
+                <Stack spacing={2}>
+                    <Typography variant="h4">Create new Password</Typography>
+                    <Typography variant="subtitle1">Enter your new password.</Typography>
+
+                    <TextField
+                        id="password"
+                        type="password"
+                        label="Password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        variant="outlined"
+                        value={password}
+                    />
+
+                    <TextField
+                        id="confirmPassword"
+                        type="password"
+                        label="Re-type your Password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        variant="outlined"
+                        value={confirmPassword}
+                    />
+
+                    <Button
+                        variant="contained"
+                        disabled={
+                            !(
+                                password.length > 0 &&
+                                confirmPassword.length > 0 &&
+                                password == confirmPassword
+                            )
+                        }
+                        onClick={() => {
+                            console.log(
+                                "Verification code: " + verificationCode + "email: " + email
+                            );
+                            setIsPasswordChangeSuccessful(true);
+                        }}
+                        size="large"
+                    >
+                        Submit Verification Code
+                    </Button>
+                </Stack>
+                <Modal
+                    open={isPasswordChangeSuccessful}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Text in a modal
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                        </Typography>
+                    </Box>
+                </Modal>
+            </>
+        );
+    };
 
     return (
         <Box
@@ -158,15 +238,27 @@ const ForgotPassword = () => {
                         setIsVerificationCodeSent,
                         setSeconds
                     )
-                    : verifyCode(
-                        verificationCode,
-                        setVerificationCode,
-                        seconds,
-                        setSeconds,
-                        resendAttempts,
-                        setResendAttempts,
-                        email
-                    )}
+                    : !isVerificationCodeSubmitted
+                        ? verifyCode(
+                            verificationCode,
+                            setVerificationCode,
+                            seconds,
+                            setSeconds,
+                            resendAttempts,
+                            setResendAttempts,
+                            email,
+                            setIsVerificationCodeSubmitted
+                        )
+                        : changePassword(
+                            email,
+                            verificationCode,
+                            password,
+                            setPassword,
+                            confirmPassword,
+                            setConfirmPassword,
+                            isPasswordChangeSuccessful,
+                            setIsPasswordChangeSuccessful
+                        )}
             </Box>
         </Box>
     );
