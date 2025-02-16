@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { IRequest } from "../interface/IRequest";
+import { AUTH_TOKEN_KEY } from "../Constants";
 
 const BASE_URL = "http://localhost:8080";
 
@@ -30,6 +31,6 @@ const sendRequest = async (req: IRequest) => {
 
 export default sendRequest;
 
-function getBearerToken() {
-  return "abcd";
-}
+const getBearerToken = () => {
+    return localStorage.getItem(AUTH_TOKEN_KEY);
+  };

@@ -21,11 +21,22 @@ export const signupUser = async (userDetails: IUserDetails) => {
   );
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
-  if (response.status == 400) {
-    return { success: false, data: "Username already exists" };
+
+export const signinUser = async (username: String, password: String) => {
+  const request: IRequest = {
+    method: RequestMethod.POST,
+    message: { username: username, password: password },
+    url: ApiRoutes.LOGIN_USER_ROUTE,
+  };
+  const response = await sendRequest(request);
+
+  if (response.status == 200) {
+    return { success: true, data: response.data.data };
   }
   console.log(
-    `User registration failed due to status: ${response.status} with error: ${response.data}`
+    `User login failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
   );
-  return { success: false, data: "User registration failed" };
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
 };

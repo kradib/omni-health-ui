@@ -7,14 +7,13 @@ import Link from "@mui/material/Link";
 import { useState } from "react";
 import { IUserDetails } from "../interface/IUserDetails";
 import { validateEmail } from "../utils/Utils";
-import { RouteConstants } from "../Constants";
+import { RouteConstants, SNACKBAR_TIMEOUT } from "../Constants";
 import { signupUser } from "../api/user";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 
-export const SNACKBAR_TIMEOUT = 3000;
 export const REDIRECT_TIMEOUT = 2000;
 
 
