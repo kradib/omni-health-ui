@@ -7,6 +7,7 @@ import Link from "@mui/material/Link";
 import { useState } from "react";
 import { IUserDetails } from "../interface/IUserDetails";
 import { validateEmail } from "../utils/Utils";
+import { RouteConstants } from "../Constants";
 
 const Register = () => {
     const [userDetails, setUserDetails] = useState<IUserDetails>({
@@ -177,7 +178,7 @@ const Register = () => {
                         </Typography>
                         <Typography align="center" variant="subtitle1">
                             Already have an account?{" "}
-                            <Link href="/login" underline="none">
+                            <Link href={RouteConstants.LOGIN_ROUTE} underline="none">
                                 Sign In
                             </Link>
                         </Typography>

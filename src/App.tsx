@@ -2,14 +2,15 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword';
+import { RouteConstants } from './Constants';
 
 const App = () => (
   <Router>
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
-      <Route path="forgot-password" element={<ForgotPassword />} />
+      <Route path="/" element={<Navigate to={RouteConstants.LOGIN_ROUTE} />} />
+      <Route path={RouteConstants.LOGIN_ROUTE} element={<Login />} />
+      <Route path={RouteConstants.REGISTER_ROUTE} element={<Register />} />
+      <Route path={RouteConstants.FORGOT_PASSWORD_ROUTE} element={<ForgotPassword />} />
     </Routes>
   </Router>
 );

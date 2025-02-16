@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useState } from "react";
+import { RouteConstants } from "../Constants";
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -57,7 +58,7 @@ const Login = () => {
                             }}
                         >
                             <Typography variant="subtitle1">
-                                <Link href="/forgot-password" underline="none">
+                                <Link href={RouteConstants.FORGOT_PASSWORD_ROUTE} underline="none">
                                     Forgot Password?
                                 </Link>
                             </Typography>
@@ -78,7 +79,7 @@ const Login = () => {
                     <div>
                         <Typography variant="subtitle1">
                             Not yet registered?{" "}
-                            <Link href="/register" underline="none">
+                            <Link href={RouteConstants.REGISTER_ROUTE} underline="none">
                                 Register Here
                             </Link>
                         </Typography>
