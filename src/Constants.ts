@@ -16,7 +16,7 @@ export class ApiRoutes {
   public static RESET_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/reset-password`;
 }
 
-export const RESEND_ATTEMPTS = 2;
-export const RESEND_TIME_INTERVAL = 60;
+export const RESEND_ATTEMPTS = 3;
+export const RESEND_TIME_INTERVAL = 3;
 export const SNACKBAR_TIMEOUT = 3000;
 export const AUTH_TOKEN_KEY = 'bearerToken';
