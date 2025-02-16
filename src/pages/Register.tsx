@@ -10,11 +10,10 @@ import { validateEmail } from "../utils/Utils";
 import { RouteConstants } from "../Constants";
 import { signupUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
 import Toast from "../components/Toast";
+import LoadingComponent from "../components/LoadingComponent";
 
 export const REDIRECT_TIMEOUT = 2000;
-
 
 const Register = () => {
     const [userDetails, setUserDetails] = useState<IUserDetails>({
@@ -188,8 +187,7 @@ const Register = () => {
                             variant="outlined"
                             value={userDetails.secondGuardianUserId}
                         />
-
-                        {!isLoading && (
+                        <LoadingComponent isLoading={isLoading}>
                             <Button
                                 variant="contained"
                                 disabled={!isValidInput(userDetails)}
@@ -198,17 +196,7 @@ const Register = () => {
                             >
                                 Register
                             </Button>
-                        )}
-                        {isLoading && (
-                            <Box
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                ml={2}
-                            >
-                                <CircularProgress size={24} sx={{ marginLeft: 2 }} />
-                            </Box>
-                        )}
+                        </LoadingComponent>
                     </Stack>
 
                     <Toast

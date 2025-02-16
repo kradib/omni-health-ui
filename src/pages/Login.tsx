@@ -7,9 +7,9 @@ import Link from "@mui/material/Link";
 import { useState } from "react";
 import { AUTH_TOKEN_KEY, RouteConstants } from "../Constants";
 import { signinUser } from "../api/user";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router";
 import Toast from "../components/Toast";
+import LoadingComponent from "../components/LoadingComponent";
 
 // Example function to save the token to localStorage
 const saveTokenToLocalStorage = (token: string) => {
@@ -105,7 +105,7 @@ const Login = () => {
                             </Typography>
                         </Box>
 
-                        {!isLoading && (
+                        <LoadingComponent isLoading={isLoading}>
                             <Button
                                 variant="contained"
                                 disabled={!(username.length > 0 && password.length > 0)}
@@ -114,17 +114,7 @@ const Login = () => {
                             >
                                 Sign In
                             </Button>
-                        )}
-                        {isLoading && (
-                            <Box
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                ml={2}
-                            >
-                                <CircularProgress size={24} sx={{ marginLeft: 2 }} />
-                            </Box>
-                        )}
+                        </LoadingComponent>
                     </Stack>
 
                     <Toast
