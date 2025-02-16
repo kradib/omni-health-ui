@@ -19,15 +19,34 @@ const theme = createTheme({
         },
       },
     },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#ffffff", // Change this to any color
+          color: "#000000", // Text color
+          boxShadow: "none",
+          borderBottom: "3px solid rgb(211, 211, 212)"
+        },
+      },
+    },
   },
   typography: {
     fontFamily: "Inter, sans-serif",
     h4: {
       fontWeight: "bold",
     },
+    h5: {
+      fontWeight: "bold",
+      color: "#5aabed",
+    },
     subtitle1: {
       fontSize: 14,
       color: "#6a6b6b",
+    },
+    subtitle2: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#868787",
     },
     button: {
       textTransform: "none",
