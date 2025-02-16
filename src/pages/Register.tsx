@@ -8,6 +8,15 @@ import { useState } from "react";
 import { IUserDetails } from "../interface/IUserDetails";
 import { validateEmail } from "../utils/Utils";
 import { RouteConstants } from "../Constants";
+import { signupUser } from "../api/user";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+
+export const SNACKBAR_TIMEOUT = 3000;
+export const REDIRECT_TIMEOUT = 2000;
+
 
 const Register = () => {
     const [userDetails, setUserDetails] = useState<IUserDetails>({
@@ -20,6 +29,13 @@ const Register = () => {
         firstGuardianUserId: "",
         secondGuardianUserId: "",
     });
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+        "success"
+    );
+    const [isLoading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     function isValidInput(userDetails: IUserDetails) {
         return (
@@ -33,12 +49,34 @@ const Register = () => {
         );
     }
 
+    const handleRegisterUser = async (userDetails: IUserDetails) => {
+        setLoading(true);
+        const response = await signupUser(userDetails);
+        setLoading(false);
+
+        setSnackbarMessage(response.data);
+        setSnackbarSeverity(response.success ? "success" : "error");
+        setOpenSnackbar(true);
+
+        if (response.success) {
+            setTimeout(() => {
+                navigate(`/${RouteConstants.LOGIN_ROUTE}`);
+            }, REDIRECT_TIMEOUT);
+        } else {
+            setSnackbarSeverity("error");
+        }
+    };
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
+
     return (
         <>
             <Box
                 sx={{
                     display: "flex",
-                    justifyContent: "center"
+                    justifyContent: "center",
                 }}
             >
                 <Box
@@ -153,15 +191,43 @@ const Register = () => {
                             value={userDetails.secondGuardianUserId}
                         />
 
-                        <Button
-                            variant="contained"
-                            disabled={!isValidInput(userDetails)}
-                            onClick={() => console.log("UsernameDetails: " + JSON.stringify(userDetails))}
-                            size="large"
-                        >
-                            Register
-                        </Button>
+                        {!isLoading && (
+                            <Button
+                                variant="contained"
+                                disabled={!isValidInput(userDetails)}
+                                onClick={() => handleRegisterUser(userDetails)}
+                                size="large"
+                            >
+                                Register
+                            </Button>
+                        )}
+                        {isLoading && (
+                            <Box
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                                ml={2}
+                            >
+                                <CircularProgress size={24} sx={{ marginLeft: 2 }} />
+                            </Box>
+                        )}
                     </Stack>
+
+                    {/* Snackbar to show success or error message */}
+                    <Snackbar
+                        open={openSnackbar}
+                        autoHideDuration={SNACKBAR_TIMEOUT}
+                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                        onClose={handleCloseSnackbar}
+                    >
+                        <Alert
+                            onClose={handleCloseSnackbar}
+                            severity={snackbarSeverity}
+                            sx={{ width: "100%" }}
+                        >
+                            {snackbarMessage}
+                        </Alert>
+                    </Snackbar>
 
                     <div>
                         <Typography align="center" variant="subtitle1">
@@ -184,7 +250,7 @@ const Register = () => {
                         </Typography>
                     </div>
                 </Box>
-            </Box >
+            </Box>
         </>
     );
 };

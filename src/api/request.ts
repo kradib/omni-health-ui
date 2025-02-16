@@ -24,7 +24,7 @@ const sendRequest = async (req: IRequest) => {
     return { status: response.status, data: response.data };
   } catch (err) {
     const error = err as AxiosError;
-    return { status: error.status, data: error.message };
+    return { status: error.status, data: error.response };
   }
 };
 
