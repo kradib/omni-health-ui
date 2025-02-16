@@ -14,6 +14,7 @@ import Toast from "../components/Toast";
 import LoadingComponent from "../components/LoadingComponent";
 import { useNavigate } from "react-router";
 import { REDIRECT_TIMEOUT } from "./Register";
+import PasswordField from "../components/PasswordField";
 
 const ForgotPassword = () => {
     const [isVerificationCodeSent, setIsVerificationCodeSent] = useState(false);
@@ -144,23 +145,17 @@ const ForgotPassword = () => {
                         variant="outlined"
                         value={verificationCode}
                     />
-                    <TextField
+
+                    <PasswordField
                         id="password"
-                        type="password"
-                        required
                         label="Password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        variant="outlined"
+                        onChange={(e: any) => setPassword(e.target.value)}
                         value={password}
                     />
-
-                    <TextField
+                    <PasswordField
                         id="confirmPassword"
-                        type="password"
-                        required
                         label="Re-type your Password"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        variant="outlined"
+                        onChange={(e: any) => setConfirmPassword(e.target.value)}
                         value={confirmPassword}
                     />
 

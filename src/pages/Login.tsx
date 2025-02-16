@@ -10,10 +10,10 @@ import { signinUser } from "../api/user";
 import { useNavigate } from "react-router";
 import Toast from "../components/Toast";
 import LoadingComponent from "../components/LoadingComponent";
+import PasswordField from "../components/PasswordField";
 
-// Example function to save the token to localStorage
 const saveTokenToLocalStorage = (token: string) => {
-    localStorage.setItem(AUTH_TOKEN_KEY, token); // 'authToken' is the key, token is the value
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
 };
 
 const Login = () => {
@@ -80,12 +80,10 @@ const Login = () => {
                             value={username}
                         />
 
-                        <TextField
+                        <PasswordField
                             id="password"
-                            type="password"
                             label="Password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            variant="outlined"
+                            onChange={(e: any) => setPassword(e.target.value)}
                             value={password}
                         />
 

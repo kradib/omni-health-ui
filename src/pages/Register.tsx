@@ -12,6 +12,7 @@ import { signupUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
 import LoadingComponent from "../components/LoadingComponent";
+import PasswordField from "../components/PasswordField";
 
 export const REDIRECT_TIMEOUT = 2000;
 
@@ -105,15 +106,12 @@ const Register = () => {
                             value={userDetails.username}
                         />
 
-                        <TextField
+                        <PasswordField
                             id="password"
-                            type="password"
                             label="Password"
-                            required
-                            onChange={(e) =>
+                            onChange={(e: any) =>
                                 setUserDetails({ ...userDetails, password: e.target.value })
                             }
-                            variant="outlined"
                             value={userDetails.password}
                         />
 
