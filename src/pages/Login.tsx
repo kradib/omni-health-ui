@@ -5,25 +5,24 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useState } from "react";
-import { AUTH_TOKEN_KEY, RouteConstants, SNACKBAR_TIMEOUT } from "../Constants";
+import { AUTH_TOKEN_KEY, RouteConstants } from "../Constants";
 import { signinUser } from "../api/user";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router";
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
+import Toast from "../components/Toast";
 
 // Example function to save the token to localStorage
 const saveTokenToLocalStorage = (token: string) => {
-    localStorage.setItem(AUTH_TOKEN_KEY, token);  // 'authToken' is the key, token is the value
+    localStorage.setItem(AUTH_TOKEN_KEY, token); // 'authToken' is the key, token is the value
 };
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setLoading] = useState(false);
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    const [openToast, setOpenToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
         "success"
     );
     const navigate = useNavigate();
@@ -40,13 +39,13 @@ const Login = () => {
             navigate(`/${RouteConstants.DASHBOARD_ROUTE}`);
             return;
         }
-        setSnackbarMessage(response.data);
-        setSnackbarSeverity(response.success ? "success" : "error");
-        setOpenSnackbar(true);
+        setToastMessage(response.data);
+        setToastSeverity(response.success ? "success" : "error");
+        setOpenToast(true);
     };
 
     const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
+        setOpenToast(false);
     };
 
     return (
@@ -128,20 +127,12 @@ const Login = () => {
                         )}
                     </Stack>
 
-                    <Snackbar
-                        open={openSnackbar}
-                        autoHideDuration={SNACKBAR_TIMEOUT}
-                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    <Toast
+                        open={openToast}
+                        severity={toastSeverity}
+                        message={toastMessage}
                         onClose={handleCloseSnackbar}
-                    >
-                        <Alert
-                            onClose={handleCloseSnackbar}
-                            severity={snackbarSeverity}
-                            sx={{ width: "100%" }}
-                        >
-                            {snackbarMessage}
-                        </Alert>
-                    </Snackbar>
+                    />
 
                     <div>
                         <Typography variant="subtitle1">

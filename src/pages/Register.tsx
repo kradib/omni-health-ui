@@ -7,12 +7,11 @@ import Link from "@mui/material/Link";
 import { useState } from "react";
 import { IUserDetails } from "../interface/IUserDetails";
 import { validateEmail } from "../utils/Utils";
-import { RouteConstants, SNACKBAR_TIMEOUT } from "../Constants";
+import { RouteConstants } from "../Constants";
 import { signupUser } from "../api/user";
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import Toast from "../components/Toast";
 
 export const REDIRECT_TIMEOUT = 2000;
 
@@ -28,9 +27,9 @@ const Register = () => {
         firstGuardianUserId: "",
         secondGuardianUserId: "",
     });
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    const [openToast, setOpenToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
         "success"
     );
     const [isLoading, setLoading] = useState(false);
@@ -53,21 +52,21 @@ const Register = () => {
         const response = await signupUser(userDetails);
         setLoading(false);
 
-        setSnackbarMessage(response.data);
-        setSnackbarSeverity(response.success ? "success" : "error");
-        setOpenSnackbar(true);
+        setToastMessage(response.data);
+        setToastSeverity(response.success ? "success" : "error");
+        setOpenToast(true);
 
         if (response.success) {
             setTimeout(() => {
                 navigate(`/${RouteConstants.LOGIN_ROUTE}`);
             }, REDIRECT_TIMEOUT);
         } else {
-            setSnackbarSeverity("error");
+            setToastSeverity("error");
         }
     };
 
     const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
+        setOpenToast(false);
     };
 
     return (
@@ -212,21 +211,12 @@ const Register = () => {
                         )}
                     </Stack>
 
-                    {/* Snackbar to show success or error message */}
-                    <Snackbar
-                        open={openSnackbar}
-                        autoHideDuration={SNACKBAR_TIMEOUT}
-                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    <Toast
+                        open={openToast}
+                        severity={toastSeverity}
+                        message={toastMessage}
                         onClose={handleCloseSnackbar}
-                    >
-                        <Alert
-                            onClose={handleCloseSnackbar}
-                            severity={snackbarSeverity}
-                            sx={{ width: "100%" }}
-                        >
-                            {snackbarMessage}
-                        </Alert>
-                    </Snackbar>
+                    />
 
                     <div>
                         <Typography align="center" variant="subtitle1">
