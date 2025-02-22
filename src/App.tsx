@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import { RouteConstants } from "./Constants";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Appointments";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import { ThemeProvider } from "@mui/material/styles";
@@ -35,7 +35,7 @@ const App = () => (
           element={<ForgotPassword />}
         />
         <Route
-          path={RouteConstants.DASHBOARD_ROUTE}
+          path={RouteConstants.APPOINTMENT_ROUTE}
           element={<ProtectedRoute element={<Dashboard />} />}
         />
       </Routes>

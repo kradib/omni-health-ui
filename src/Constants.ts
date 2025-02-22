@@ -2,13 +2,14 @@ export const enum RouteConstants {
   LOGIN_ROUTE = "login",
   REGISTER_ROUTE = "register",
   FORGOT_PASSWORD_ROUTE = "forgot-password",
-  DASHBOARD_ROUTE = "dashboard"
+  APPOINTMENT_ROUTE = "appointments"
 }
 
 export class ApiRoutes {
   public static BASE_ROUTE = "/api/v1";
 
   public static USER_BASE_ROUTE = `${this.BASE_ROUTE}/user`;
+  public static APPOINTMENT_BASE_ROUTE = `${this.BASE_ROUTE}/appointment`;
 
   public static REGISTER_USER_ROUTE = `${this.USER_BASE_ROUTE}/signup`;
   public static LOGIN_USER_ROUTE = `${this.USER_BASE_ROUTE}/signin`;

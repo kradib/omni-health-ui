@@ -36,7 +36,7 @@ const Login = () => {
             // Set bearer token
             const token = response.data.authToken;
             saveTokenToLocalStorage(token);
-            navigate(`/${RouteConstants.DASHBOARD_ROUTE}`);
+            navigate(`/${RouteConstants.APPOINTMENT_ROUTE}`);
             return;
         }
         setToastMessage(response.data);

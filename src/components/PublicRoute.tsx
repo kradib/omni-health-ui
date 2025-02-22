@@ -12,7 +12,7 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ element }) => {
     const isAuthenticated = !!authToken?.length;
 
     if (isAuthenticated) {
-        return <Navigate to={`/${RouteConstants.DASHBOARD_ROUTE}`} replace />;
+        return <Navigate to={`/${RouteConstants.APPOINTMENT_ROUTE}`} replace />;
     }
 
     return element;
