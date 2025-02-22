@@ -125,7 +125,10 @@ const Appointments = () => {
                     >
                         {ownAppointments.map((appointment: any) => (
                             <Grid key={appointment.id} size={{ xs: 12, md: 4 }}>
-                                <AppointmentCard appointment={appointment} />
+                                <AppointmentCard
+                                    appointment={appointment}
+                                    onCancel={handleCreated}
+                                />
                             </Grid>
                         ))}
                     </Grid>

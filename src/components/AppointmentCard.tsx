@@ -1,14 +1,20 @@
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import React from "react";
+import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import dayjs from "dayjs";
 import Button from "@mui/material/Button";
-
+import { cancelAppointment } from "../api/appointment";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 interface IAppointmentCardProps {
     appointment: any;
+    onCancel?: any;
+    onReschedule?: any;
 }
 
 const cardStyle = {
@@ -30,7 +36,7 @@ const COMPLETED_APPOINTMENT_STATUS = "Completed";
 const CANCELLED_APPOINTMENT_STATUS = "Cancelled";
 
 const getAppointmentStatus: any = (appointment: any) => {
-    if (appointment.status == 0) {
+    if (appointment.status == 2) {
         return {
             appointmentStatus: CANCELLED_APPOINTMENT_STATUS,
             statusColor: "#cf2b2b",
@@ -48,8 +54,46 @@ const getAppointmentStatus: any = (appointment: any) => {
     };
 };
 
-const AppointmentCard: React.FC<IAppointmentCardProps> = ({ appointment }) => {
+const AppointmentCard: React.FC<IAppointmentCardProps> = ({
+    appointment,
+    onCancel,
+}) => {
     const { appointmentStatus, statusColor } = getAppointmentStatus(appointment);
+    const [cancellationConfirmation, setCancellationConfirmation] =
+        useState(false);
+
+    const handleCancel = async () => {
+        const response = await cancelAppointment(appointment.id);
+        onCancel(response.data, response.success ? "success" : "error");
+        setCancellationConfirmation(false);
+    };
+
+    const handleClose = () => {
+        setCancellationConfirmation(false);
+    };
+
+    const cancellationConfirmationDialog = () => {
+        return (
+            <Dialog
+                open={cancellationConfirmation}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to cancel your appointment?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>No</Button>
+                    <Button onClick={handleCancel} autoFocus>
+                        Yes
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    };
 
     return (
         <>
@@ -109,6 +153,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({ appointment }) => {
                         <Button
                             disabled={appointmentStatus != UPCOMING_APPOINTMENT_STATUS}
                             variant="outlined"
+                            onClick={() => setCancellationConfirmation(true)}
                         >
                             Cancel
                         </Button>
@@ -121,6 +166,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({ appointment }) => {
                     </Stack>
                 </Stack>
             </Box>
+            {cancellationConfirmationDialog()}
         </>
     );
 };

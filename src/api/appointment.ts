@@ -45,3 +45,23 @@ export const getAppointments = async (params: IGetAppointmentsParams) => {
   );
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
+
+export const cancelAppointment = async (appointmentId: number) => {
+  const request: IRequest = {
+    method: RequestMethod.DELETE,
+    url: ApiRoutes.APPOINTMENT_BASE_ROUTE,
+    message: { appointmentId: appointmentId },
+    isAuthRequired: true,
+  };
+
+  const response = await sendRequest(request);
+  if (response.status == 200) {
+    return { success: true, data: "Appointment successfully cancelled" };
+  }
+  console.log(
+    `Appointment cancellation failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response)}`
+  );
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
+};
