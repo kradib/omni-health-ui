@@ -32,12 +32,21 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Inter, sans-serif",
+    h2: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: "#000000",
+    },
     h4: {
       fontWeight: "bold",
     },
     h5: {
       fontWeight: "bold",
       color: "#5aabed",
+    },
+    h6: {
+      fontWeight: "bold",
+      color: "#6a6b6b",
     },
     subtitle1: {
       fontSize: 14,

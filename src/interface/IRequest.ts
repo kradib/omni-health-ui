@@ -7,7 +7,7 @@ export enum RequestMethod {
 
 export interface IRequest {
     method: RequestMethod;
-    queryParams?: String;
+    queryParams?: Object;
     message?: Object;
     url: String;
     isAuthRequired?: boolean;

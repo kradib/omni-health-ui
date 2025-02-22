@@ -11,6 +11,7 @@ const sendRequest = async (req: IRequest) => {
     url: finalUrl,
     data: req.message,
     headers: {},
+    params: req.queryParams
   };
 
   if (req.isAuthRequired === true) {
