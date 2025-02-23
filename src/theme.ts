@@ -25,7 +25,7 @@ const theme = createTheme({
           backgroundColor: "#ffffff", // Change this to any color
           color: "#000000", // Text color
           boxShadow: "none",
-          borderBottom: "3px solid rgb(211, 211, 212)"
+          borderBottom: "3px solid rgb(211, 211, 212)",
         },
       },
     },

@@ -7,6 +7,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IAppointmentDetails } from "../interface/IAppointmentDetails";
 import { createAppointment } from "../api/appointment";
+import TimeSlotPicker from "./AppointmentSlotPicker";
+import dayjs from "dayjs";
+import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_INPUT_FORMAT } from "../Constants";
 
 interface CreateAppointmentModalProps {
     show: boolean;
@@ -37,20 +40,38 @@ const isValidInput = (appointmentDetails: IAppointmentDetails) => {
 const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
     show,
     handleCreated,
-    handleClose
+    handleClose,
 }) => {
-    const [appointment, setAppointment] = useState({
+    const initialAppointmentState = {
         appointmentDateTime: "",
         appointmentPlace: "",
         doctorName: "",
-    });
+    };
+
+    const [appointment, setAppointment] = useState(initialAppointmentState);
     const [isLoading, setLoading] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
 
     const handleCreateAppointment = async () => {
         setLoading(true);
         const response = await createAppointment(appointment);
         setLoading(false);
+        setAppointment(initialAppointmentState);
+        setPageNumber(1);
         handleCreated(response.data, response.success ? "success" : "error");
+    };
+
+    const handleTimeChange = (time: string, date: any) => {
+        const finalDate = dayjs(
+            `${date.format(DATE_FORMAT)} ${time}`,
+            `${DATE_FORMAT} ${TIME_INPUT_FORMAT}`
+        ).format(DATE_TIME_FORMAT);
+        console.log(finalDate);
+        setAppointment({ ...appointment, appointmentDateTime: finalDate });
+    };
+
+    const timeSlot = () => {
+        return <TimeSlotPicker onChange={handleTimeChange} />;
     };
 
     return (
@@ -64,54 +85,71 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                 <Box sx={style}>
                     <Stack spacing={2}>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Create Appointment
+                            New Appointment
                         </Typography>
 
-                        <TextField
-                            id="appointmentDateTime"
-                            label="Appointment Date Time"
-                            onChange={(e) =>
-                                setAppointment({
-                                    ...appointment,
-                                    appointmentDateTime: e.target.value,
-                                })
-                            }
-                            variant="outlined"
-                            value={appointment.appointmentDateTime}
-                        />
-                        <TextField
-                            id="appointmentPlace"
-                            label="Appointment Place"
-                            onChange={(e) =>
-                                setAppointment({
-                                    ...appointment,
-                                    appointmentPlace: e.target.value,
-                                })
-                            }
-                            variant="outlined"
-                            value={appointment.appointmentPlace}
-                        />
-                        <TextField
-                            id="doctorName"
-                            label="Doctor Name"
-                            onChange={(e) =>
-                                setAppointment({
-                                    ...appointment,
-                                    doctorName: e.target.value,
-                                })
-                            }
-                            variant="outlined"
-                            value={appointment.doctorName}
-                        />
-                        <Button
-                            variant="contained"
-                            disabled={!isValidInput(appointment)}
-                            onClick={handleCreateAppointment}
-                            size="large"
-                            loading={isLoading}
-                        >
-                            Create Appointment
-                        </Button>
+                        {pageNumber == 1 && (
+                            <>
+                                {timeSlot()}
+                                <Button
+                                    variant="contained"
+                                    disabled={appointment.appointmentDateTime.length == 0}
+                                    onClick={() => setPageNumber(2)}
+                                    size="large"
+                                >
+                                    Next
+                                </Button>
+                            </>
+                        )}
+
+                        {pageNumber == 2 && (
+                            <>
+                                <TextField
+                                    id="appointmentPlace"
+                                    label="Appointment Place"
+                                    onChange={(e) =>
+                                        setAppointment({
+                                            ...appointment,
+                                            appointmentPlace: e.target.value,
+                                        })
+                                    }
+                                    variant="outlined"
+                                    value={appointment.appointmentPlace}
+                                />
+                                <TextField
+                                    id="doctorName"
+                                    label="Doctor Name"
+                                    onChange={(e) =>
+                                        setAppointment({
+                                            ...appointment,
+                                            doctorName: e.target.value,
+                                        })
+                                    }
+                                    variant="outlined"
+                                    value={appointment.doctorName}
+                                />
+                                <Stack direction="row" spacing={2}>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => setPageNumber(1)}
+                                        size="large"
+                                        sx={{ flex: 1 }}
+                                    >
+                                        Go back
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        disabled={!isValidInput(appointment)}
+                                        onClick={handleCreateAppointment}
+                                        size="large"
+                                        loading={isLoading}
+                                        sx={{ flex: 1 }}
+                                    >
+                                        Create Appointment
+                                    </Button>
+                                </Stack>
+                            </>
+                        )}
                     </Stack>
                 </Box>
             </Modal>
