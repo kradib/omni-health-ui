@@ -18,7 +18,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DATE_TIME_FORMAT } from "../Constants";
 import dayjs from "dayjs";
 import { IGetAppointmentsParams } from "../interface/IGetAppointmentsParams";
-
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 const DEFAULT_PAGE_SIZE = 6;
 
 const Appointments = () => {
@@ -33,10 +34,12 @@ const Appointments = () => {
     const [isOwnAppointmentsEmpty, setIsOwnAppointmentsEmpty] = useState(false);
     const [isLoading, setLoading] = useState(false);
     const [pageLimit, setPageLimit] = useState(0);
-    const [appointmentParams, setAppointmentParams] = useState<IGetAppointmentsParams>({
-        page: 1,
-        size: DEFAULT_PAGE_SIZE,
-    });
+    const [appointmentParams, setAppointmentParams] =
+        useState<IGetAppointmentsParams>({
+            status: "all",
+            page: 1,
+            size: DEFAULT_PAGE_SIZE,
+        });
 
     const handleCloseSnackbar = () => {
         setOpenToast(false);
@@ -123,6 +126,28 @@ const Appointments = () => {
         return (
             <>
                 <Stack spacing={2}>
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        <Tabs
+                            centered
+                            value={appointmentParams.status}
+                            onChange={(_event: React.SyntheticEvent, newValue: any) => {
+                                setAppointmentParams({
+                                    ...appointmentParams,
+                                    status: newValue,
+                                });
+                            }}
+                            sx={{
+                                width: "100%", // Set the desired width
+                                maxWidth: { xs: "100vw", md: "400px" }, // Optional: Limit max width
+                            }}
+                        >
+                            <Tab label="All" value="all" />
+                            <Tab label="Upcoming" value="upcoming" />
+                            <Tab label="Completed" value="completed" />
+                            <Tab label="Cancelled" value="cancelled" />
+                        </Tabs>
+                    </Box>
+
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Stack spacing={2} direction="row">
                             <DateTimePicker

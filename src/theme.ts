@@ -29,6 +29,33 @@ const theme = createTheme({
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: "#000000",
+          minHeight: "15px",
+          "&.Mui-selected": {
+            backgroundColor: "#349eeb",
+            color: "#ffffff",
+            borderRadius: "25px",
+            borderBottom: "none",
+          },
+        },
+      },
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#ebeef0",
+          alignItems: "center",
+          borderRadius: "25px",
+        },
+        indicator: {
+          display: "none",
+          transition: "all 0.3s ease-in-out",
+        },
+      },
+    },
   },
   typography: {
     fontFamily: "Inter, sans-serif",
