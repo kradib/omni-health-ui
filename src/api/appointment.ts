@@ -46,6 +46,29 @@ export const getAppointments = async (params: IGetAppointmentsParams) => {
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
+export const rescheduleAppointment = async (
+  appointmentId: number,
+  appointmentDetails: IAppointmentDetails
+) => {
+  const request: IRequest = {
+    method: RequestMethod.PATCH,
+    message: appointmentDetails,
+    url: `${ApiRoutes.APPOINTMENT_BASE_ROUTE}/${appointmentId}`,
+    isAuthRequired: true
+  };
+
+  const response = await sendRequest(request);
+  if (response.status == 200) {
+    return { success: true, data: "Appointment successfully rescheduled" };
+  }
+  console.log(
+    `Appointment reschedule failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response)}`
+  );
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
+};
+
 export const cancelAppointment = async (appointmentId: number) => {
   const request: IRequest = {
     method: RequestMethod.DELETE,

@@ -9,10 +9,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
-import { DATE_FORMAT, TIME_INPUT_FORMAT } from "../Constants";
+import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_INPUT_FORMAT } from "../Constants";
 
 interface IAppointmentSlotPickerProps {
     onChange?: any;
+    appointmentDateTime?: string;
 }
 
 const ALLOWED_TIME_SLOTS = [
@@ -41,18 +42,31 @@ const getAllowedSlots = (givenDate: any, refDate: any) => {
 
 const AppointmentSlotPicker: React.FC<IAppointmentSlotPickerProps> = ({
     onChange,
+    appointmentDateTime,
 }) => {
+    const inputDate = appointmentDateTime
+        ? dayjs(appointmentDateTime, DATE_TIME_FORMAT)
+        : undefined;
+
+    const inputTime = appointmentDateTime
+        ? dayjs(appointmentDateTime, DATE_TIME_FORMAT).format(TIME_INPUT_FORMAT)
+        : undefined;
+
     let defaultDate = dayjs();
-    let allowedSlots = getAllowedSlots(defaultDate, defaultDate);
+    console.log("Def date", defaultDate.format(DATE_FORMAT));
+    let allowedSlots = getAllowedSlots(defaultDate, dayjs());
 
     if (allowedSlots.length == 0) {
         // No more slots available today
         defaultDate = defaultDate.add(1, "day");
     }
 
-    const [selectedDate, setSelectedDate] = useState(defaultDate);
-    const [selectedTime, setSelectedTime] = useState(allowedSlots[0]);
+    const [selectedDate, setSelectedDate] = useState(inputDate ?? defaultDate);
     allowedSlots = getAllowedSlots(selectedDate, dayjs());
+
+    const [selectedTime, setSelectedTime] = useState(
+        inputTime ?? allowedSlots[0]
+    );
 
     if (!allowedSlots.includes(selectedTime)) {
         setSelectedTime(allowedSlots[0]);

@@ -128,6 +128,7 @@ const Appointments = () => {
                                 <AppointmentCard
                                     appointment={appointment}
                                     onCancel={handleCreated}
+                                    onReschedule={handleCreated}
                                 />
                             </Grid>
                         ))}

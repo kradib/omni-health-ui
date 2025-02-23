@@ -11,6 +11,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
+import CreateAppointmentModal from "./CreateAppointmentModal";
 interface IAppointmentCardProps {
     appointment: any;
     onCancel?: any;
@@ -42,7 +43,7 @@ const getAppointmentStatus: any = (appointment: any) => {
             statusColor: "#cf2b2b",
         };
     }
-    if (dayjs(appointment.appointmentDateTime).isBefore(dayjs(), "day")) {
+    if (dayjs(appointment.appointmentDateTime).isBefore(dayjs())) {
         return {
             appointmentStatus: COMPLETED_APPOINTMENT_STATUS,
             statusColor: "#1bd176",
@@ -57,10 +58,12 @@ const getAppointmentStatus: any = (appointment: any) => {
 const AppointmentCard: React.FC<IAppointmentCardProps> = ({
     appointment,
     onCancel,
+    onReschedule,
 }) => {
     const { appointmentStatus, statusColor } = getAppointmentStatus(appointment);
     const [cancellationConfirmation, setCancellationConfirmation] =
         useState(false);
+    const [showRescheduleModal, setShowRescheduleModal] = useState(false);
 
     const handleCancel = async () => {
         const response = await cancelAppointment(appointment.id);
@@ -68,7 +71,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
         setCancellationConfirmation(false);
     };
 
-    const handleClose = () => {
+    const handleCancellationClose = () => {
         setCancellationConfirmation(false);
     };
 
@@ -76,7 +79,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
         return (
             <Dialog
                 open={cancellationConfirmation}
-                onClose={handleClose}
+                onClose={handleCancellationClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -86,12 +89,37 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
+                    <Button onClick={handleCancellationClose}>No</Button>
                     <Button onClick={handleCancel} autoFocus>
                         Yes
                     </Button>
                 </DialogActions>
             </Dialog>
+        );
+    };
+
+    const handleRescheduled = (
+        message: string,
+        severity: "success" | "error"
+    ) => {
+        setShowRescheduleModal(false);
+        onReschedule(message, severity);
+    };
+
+    const handleClose = () => {
+        setShowRescheduleModal(false);
+    };
+
+    const rescheduleModal = () => {
+        return (
+            <CreateAppointmentModal
+                show={showRescheduleModal}
+                handleCreated={handleRescheduled}
+                handleClose={handleClose}
+                isRescheduling={true}
+                rescheduleAppointmentDetails={appointment}
+                appointmentId={appointment.id}
+            />
         );
     };
 
@@ -160,6 +188,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                         <Button
                             disabled={appointmentStatus != UPCOMING_APPOINTMENT_STATUS}
                             variant="contained"
+                            onClick={() => setShowRescheduleModal(true)}
                         >
                             Reschedule
                         </Button>
@@ -167,6 +196,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                 </Stack>
             </Box>
             {cancellationConfirmationDialog()}
+            {showRescheduleModal && rescheduleModal()}
         </>
     );
 };

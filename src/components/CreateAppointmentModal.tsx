@@ -6,16 +6,28 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { IAppointmentDetails } from "../interface/IAppointmentDetails";
-import { createAppointment } from "../api/appointment";
+import { createAppointment, rescheduleAppointment } from "../api/appointment";
 import TimeSlotPicker from "./AppointmentSlotPicker";
 import dayjs from "dayjs";
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_INPUT_FORMAT } from "../Constants";
 
-interface CreateAppointmentModalProps {
-    show: boolean;
-    handleCreated: any;
-    handleClose: any;
-}
+type CreateAppointmentModalProps =
+    | {
+        show: boolean;
+        handleCreated: any;
+        handleClose: any;
+        isRescheduling: true;
+        rescheduleAppointmentDetails: IAppointmentDetails; // Required when rescheduling
+        appointmentId: number;
+    }
+    | {
+        show: boolean;
+        handleCreated: any;
+        handleClose: any;
+        isRescheduling?: false;
+        rescheduleAppointmentDetails?: undefined; // Undefined when not rescheduling
+        appointmentId?: undefined;
+    };
 
 const style = {
     position: "absolute",
@@ -41,6 +53,9 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
     show,
     handleCreated,
     handleClose,
+    isRescheduling,
+    rescheduleAppointmentDetails,
+    appointmentId,
 }) => {
     const initialAppointmentState = {
         appointmentDateTime: "",
@@ -48,13 +63,23 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
         doctorName: "",
     };
 
-    const [appointment, setAppointment] = useState(initialAppointmentState);
+    const [appointment, setAppointment] = useState(
+        isRescheduling ? rescheduleAppointmentDetails : initialAppointmentState
+    );
+
     const [isLoading, setLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
 
-    const handleCreateAppointment = async () => {
+    const handleCreateOrUpdateAppointment = async () => {
         setLoading(true);
-        const response = await createAppointment(appointment);
+        let response;
+        if (!isRescheduling) {
+            // Then new creation
+            response = await createAppointment(appointment);
+        } else {
+            // Else reschedule
+            response = await rescheduleAppointment(appointmentId, appointment);
+        }
         setLoading(false);
         setAppointment(initialAppointmentState);
         setPageNumber(1);
@@ -71,7 +96,14 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
     };
 
     const timeSlot = () => {
-        return <TimeSlotPicker onChange={handleTimeChange} />;
+        return (
+            <TimeSlotPicker
+                onChange={handleTimeChange}
+                appointmentDateTime={
+                    isRescheduling ? appointment.appointmentDateTime : undefined
+                }
+            />
+        );
     };
 
     return (
@@ -85,24 +117,26 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                 <Box sx={style}>
                     <Stack spacing={2}>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                            New Appointment
+                            {isRescheduling ? "Reschedule Appointment" : "New Appointment"}
                         </Typography>
 
                         {pageNumber == 1 && (
                             <>
                                 {timeSlot()}
-                                <Button
-                                    variant="contained"
-                                    disabled={appointment.appointmentDateTime.length == 0}
-                                    onClick={() => setPageNumber(2)}
-                                    size="large"
-                                >
-                                    Next
-                                </Button>
+                                {!isRescheduling && (
+                                    <Button
+                                        variant="contained"
+                                        disabled={appointment.appointmentDateTime.length == 0}
+                                        onClick={() => setPageNumber(2)}
+                                        size="large"
+                                    >
+                                        Next
+                                    </Button>
+                                )}
                             </>
                         )}
 
-                        {pageNumber == 2 && (
+                        {pageNumber == 2 && !isRescheduling && (
                             <>
                                 <TextField
                                     id="appointmentPlace"
@@ -140,7 +174,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                                     <Button
                                         variant="contained"
                                         disabled={!isValidInput(appointment)}
-                                        onClick={handleCreateAppointment}
+                                        onClick={handleCreateOrUpdateAppointment}
                                         size="large"
                                         loading={isLoading}
                                         sx={{ flex: 1 }}
@@ -149,6 +183,19 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                                     </Button>
                                 </Stack>
                             </>
+                        )}
+
+                        {isRescheduling && (
+                            <Button
+                                variant="contained"
+                                disabled={!isValidInput(appointment)}
+                                onClick={handleCreateOrUpdateAppointment}
+                                size="large"
+                                loading={isLoading}
+                                sx={{ flex: 1 }}
+                            >
+                                Reschedule Appointment
+                            </Button>
                         )}
                     </Stack>
                 </Box>
