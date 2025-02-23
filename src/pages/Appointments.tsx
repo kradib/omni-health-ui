@@ -12,6 +12,13 @@ import Grid from "@mui/material/Grid2";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DATE_TIME_FORMAT } from "../Constants";
+import dayjs from "dayjs";
+import { IGetAppointmentsParams } from "../interface/IGetAppointmentsParams";
+
 const DEFAULT_PAGE_SIZE = 6;
 
 const Appointments = () => {
@@ -26,9 +33,7 @@ const Appointments = () => {
     const [isOwnAppointmentsEmpty, setIsOwnAppointmentsEmpty] = useState(false);
     const [isLoading, setLoading] = useState(false);
     const [pageLimit, setPageLimit] = useState(0);
-    const [appointmentParams, setAppointmentParams] = useState({
-        startDate: "2024-12-01T00:00:00",
-        endDate: "2025-02-27T23:59:59",
+    const [appointmentParams, setAppointmentParams] = useState<IGetAppointmentsParams>({
         page: 1,
         size: DEFAULT_PAGE_SIZE,
     });
@@ -118,6 +123,39 @@ const Appointments = () => {
         return (
             <>
                 <Stack spacing={2}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <Stack spacing={2} direction="row">
+                            <DateTimePicker
+                                label="Start Date & Time"
+                                value={dayjs(appointmentParams.startDate, DATE_TIME_FORMAT)}
+                                onChange={(newValue) =>
+                                    setAppointmentParams({
+                                        ...appointmentParams,
+                                        startDate: newValue
+                                            ? newValue.format(DATE_TIME_FORMAT)
+                                            : dayjs().format(DATE_TIME_FORMAT),
+                                    })
+                                }
+                            />
+
+                            <DateTimePicker
+                                label="End Date & Time"
+                                value={dayjs(appointmentParams.endDate, DATE_TIME_FORMAT)}
+                                onChange={(newValue) =>
+                                    setAppointmentParams({
+                                        ...appointmentParams,
+                                        endDate: newValue
+                                            ? newValue.format(DATE_TIME_FORMAT)
+                                            : dayjs().format(DATE_TIME_FORMAT),
+                                    })
+                                }
+                                minDateTime={dayjs(
+                                    appointmentParams.startDate,
+                                    DATE_TIME_FORMAT
+                                )} // Prevent end date from being before start date
+                            />
+                        </Stack>
+                    </LocalizationProvider>
                     <Grid
                         container
                         sx={{ marginTop: 2, alignItems: "center" }}
