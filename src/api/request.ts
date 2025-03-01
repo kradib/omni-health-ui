@@ -10,7 +10,7 @@ const sendRequest = async (req: IRequest) => {
     method: req.method,
     url: finalUrl,
     data: req.message,
-    headers: {},
+    headers: req.headers || {},
     params: req.queryParams
   };
 

@@ -12,11 +12,14 @@ export class ApiRoutes {
   public static USER_BASE_ROUTE = `${this.BASE_ROUTE}/user`;
   public static APPOINTMENT_BASE_ROUTE = `${this.BASE_ROUTE}/appointment`;
   public static DOCTOR_BASE_ROUTE = `${this.BASE_ROUTE}/doctor`;
+  public static DOCUMENT_BASE_ROUTE = `${this.BASE_ROUTE}/documents`;
 
   public static REGISTER_USER_ROUTE = `${this.USER_BASE_ROUTE}/signup`;
   public static LOGIN_USER_ROUTE = `${this.USER_BASE_ROUTE}/signin`;
   public static FORGOT_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/forget-password`;
   public static RESET_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/reset-password`;
+
+  public static UPLOAD_FILE_ROUTE = `${this.DOCUMENT_BASE_ROUTE}/upload`;
 }
 
 export const RESEND_ATTEMPTS = 3;
@@ -26,3 +29,8 @@ export const AUTH_TOKEN_KEY = "bearerToken";
 export const DATE_FORMAT = "YYYY-MM-DD";
 export const TIME_INPUT_FORMAT = "hh:mm A";
 export const DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+
+export const SUPPORTED_FILE_TYPES_FOR_UPLOAD = [
+  "application/pdf",
+  "image/jpeg",
+];

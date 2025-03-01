@@ -11,4 +11,5 @@ export interface IRequest {
     message?: Object;
     url: String;
     isAuthRequired?: boolean;
+    headers?: any;
 }
