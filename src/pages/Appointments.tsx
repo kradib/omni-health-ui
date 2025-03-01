@@ -110,11 +110,13 @@ const Appointments = () => {
                     onClose={handleCloseSnackbar}
                 />
 
-                <CreateAppointmentModal
-                    show={showAddModal}
-                    handleCreated={handleCreated}
-                    handleClose={handleClose}
-                />
+                {showAddModal && (
+                    <CreateAppointmentModal
+                        show={showAddModal}
+                        handleCreated={handleCreated}
+                        handleClose={handleClose}
+                    />
+                )}
             </>
         );
     };
