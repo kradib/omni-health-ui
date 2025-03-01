@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { IRequest } from "../interface/IRequest";
 import { AUTH_TOKEN_KEY } from "../Constants";
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = import.meta.env.VITE_API_URL;;
 
 const sendRequest = async (req: IRequest) => {
   const finalUrl = BASE_URL + req.url;
