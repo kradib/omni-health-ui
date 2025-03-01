@@ -1,6 +1,3 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -12,6 +9,7 @@ import dayjs from "dayjs";
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_INPUT_FORMAT } from "../Constants";
 import Autocomplete from "@mui/material/Autocomplete";
 import { getDoctors } from "../api/doctor";
+import ModalComponent from "./ModalComponent";
 
 type CreateAppointmentModalProps =
     | {
@@ -30,18 +28,6 @@ type CreateAppointmentModalProps =
         rescheduleAppointmentDetails?: undefined; // Undefined when not rescheduling
         appointmentId?: undefined;
     };
-
-const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    borderRadius: "10px",
-    boxShadow: 24,
-    p: 4,
-};
 
 const isValidInput = (appointmentDetails: IAppointmentDetails) => {
     return (
@@ -126,106 +112,86 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
 
     return (
         <>
-            <Modal
+            <ModalComponent
                 open={show}
                 onClose={handleClose}
+                title={isRescheduling ? "Reschedule Appointment" : "New Appointment"}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>
-                    <Stack spacing={2}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            {isRescheduling ? "Reschedule Appointment" : "New Appointment"}
-                        </Typography>
-
-                        {pageNumber == 1 && (
-                            <>
-                                {timeSlot()}
-                                {!isRescheduling && (
-                                    <Button
-                                        variant="contained"
-                                        disabled={appointment.appointmentDateTime.length == 0}
-                                        onClick={() => setPageNumber(2)}
-                                        size="large"
-                                    >
-                                        Next
-                                    </Button>
-                                )}
-                            </>
+                {pageNumber == 1 && (
+                    <>
+                        {timeSlot()}
+                        {!isRescheduling && (
+                            <Button
+                                variant="contained"
+                                disabled={appointment.appointmentDateTime.length == 0}
+                                onClick={() => setPageNumber(2)}
+                                size="large"
+                            >
+                                Next
+                            </Button>
                         )}
+                    </>
+                )}
 
-                        {pageNumber == 2 && !isRescheduling && (
-                            <>
-                                <Autocomplete
-                                    id="doctorName"
-                                    options={doctors}
-                                    getOptionLabel={(value: any) =>
-                                        `${value.firstName} ${value.lastName}`
-                                    }
-                                    autoSelect
-                                    onChange={(_e, value: any) => {
-                                        console.log("Doctor value", value);
-                                        if (value) {
-                                            setAppointment({
-                                                ...appointment,
-                                                doctorId: `${value.id}`,
-                                                doctorName: `${value.firstName} ${value.lastName}`,
-                                                appointmentPlace: value.location,
-                                            });
-                                            setSelectedDoctor(value);
-                                        }
-                                    }}
-                                    onInputChange={(_e, value) => {
-                                        if (value && value.length > 3) {
-                                            handleGetDoctors(value);
-                                        }
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Select Doctor"
-                                            variant="outlined"
-                                        />
-                                    )}
-                                    value={selectedDoctor}
-                                />
+                {pageNumber == 2 && !isRescheduling && (
+                    <>
+                        <Autocomplete
+                            id="doctorName"
+                            options={doctors}
+                            getOptionLabel={(value: any) =>
+                                `${value.firstName} ${value.lastName}`
+                            }
+                            autoSelect
+                            onChange={(_e, value: any) => {
+                                console.log("Doctor value", value);
+                                if (value) {
+                                    setAppointment({
+                                        ...appointment,
+                                        doctorId: `${value.id}`,
+                                        doctorName: `${value.firstName} ${value.lastName}`,
+                                        appointmentPlace: value.location,
+                                    });
+                                    setSelectedDoctor(value);
+                                }
+                            }}
+                            onInputChange={(_e, value) => {
+                                if (value && value.length > 3) {
+                                    handleGetDoctors(value);
+                                }
+                            }}
+                            renderInput={(params) => (
                                 <TextField
-                                    id="appointmentPlace"
-                                    label="Appointment Place"
-                                    disabled
-                                    onChange={(e) =>
-                                        setAppointment({
-                                            ...appointment,
-                                            appointmentPlace: e.target.value,
-                                        })
-                                    }
+                                    {...params}
+                                    label="Select Doctor"
                                     variant="outlined"
-                                    value={appointment.appointmentPlace}
                                 />
-                                <Stack direction="row" spacing={2}>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() => setPageNumber(1)}
-                                        size="large"
-                                        sx={{ flex: 1 }}
-                                    >
-                                        Go back
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        disabled={!isValidInput(appointment)}
-                                        onClick={handleCreateOrUpdateAppointment}
-                                        size="large"
-                                        loading={isLoading}
-                                        sx={{ flex: 1 }}
-                                    >
-                                        Create Appointment
-                                    </Button>
-                                </Stack>
-                            </>
-                        )}
-
-                        {isRescheduling && (
+                            )}
+                            value={selectedDoctor}
+                        />
+                        <TextField
+                            id="appointmentPlace"
+                            label="Appointment Place"
+                            disabled
+                            onChange={(e) =>
+                                setAppointment({
+                                    ...appointment,
+                                    appointmentPlace: e.target.value,
+                                })
+                            }
+                            variant="outlined"
+                            value={appointment.appointmentPlace}
+                        />
+                        <Stack direction="row" spacing={2}>
+                            <Button
+                                variant="outlined"
+                                onClick={() => setPageNumber(1)}
+                                size="large"
+                                sx={{ flex: 1 }}
+                            >
+                                Go back
+                            </Button>
                             <Button
                                 variant="contained"
                                 disabled={!isValidInput(appointment)}
@@ -234,12 +200,25 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                                 loading={isLoading}
                                 sx={{ flex: 1 }}
                             >
-                                Reschedule Appointment
+                                Create Appointment
                             </Button>
-                        )}
-                    </Stack>
-                </Box>
-            </Modal>
+                        </Stack>
+                    </>
+                )}
+
+                {isRescheduling && (
+                    <Button
+                        variant="contained"
+                        disabled={!isValidInput(appointment)}
+                        onClick={handleCreateOrUpdateAppointment}
+                        size="large"
+                        loading={isLoading}
+                        sx={{ flex: 1 }}
+                    >
+                        Reschedule Appointment
+                    </Button>
+                )}
+            </ModalComponent>
         </>
     );
 };
