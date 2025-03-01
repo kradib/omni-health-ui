@@ -10,6 +10,7 @@ export class ApiRoutes {
 
   public static USER_BASE_ROUTE = `${this.BASE_ROUTE}/user`;
   public static APPOINTMENT_BASE_ROUTE = `${this.BASE_ROUTE}/appointment`;
+  public static DOCTOR_BASE_ROUTE = `${this.BASE_ROUTE}/doctor`;
 
   public static REGISTER_USER_ROUTE = `${this.USER_BASE_ROUTE}/signup`;
   public static LOGIN_USER_ROUTE = `${this.USER_BASE_ROUTE}/signin`;
