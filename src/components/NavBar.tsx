@@ -88,7 +88,7 @@ const NavBar = ({ children }: { children: React.ReactNode }) => {
                     <ListItem key="appointment" disablePadding>
                         <ListItemButton
                             onClick={() => {
-                                console.log("Appointment");
+                                navigate(`/${RouteConstants.APPOINTMENT_ROUTE}`);
                             }}
                         >
                             <ListItemIcon>
@@ -99,7 +99,11 @@ const NavBar = ({ children }: { children: React.ReactNode }) => {
                     </ListItem>
 
                     <ListItem key="documents" disablePadding>
-                        <ListItemButton>
+                        <ListItemButton
+                            onClick={() => {
+                                navigate(`/${RouteConstants.DOCUMENT_ROUTE}`);
+                            }}
+                        >
                             <ListItemIcon>
                                 <ContentPasteIcon />
                             </ListItemIcon>

@@ -3,6 +3,7 @@ export const enum RouteConstants {
   REGISTER_ROUTE = "register",
   FORGOT_PASSWORD_ROUTE = "forgot-password",
   APPOINTMENT_ROUTE = "appointments",
+  DOCUMENT_ROUTE = "documents",
 }
 
 export class ApiRoutes {

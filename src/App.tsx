@@ -8,11 +8,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import { RouteConstants } from "./Constants";
-import Dashboard from "./pages/Appointments";
+import Appointments from "./pages/Appointments";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
+import Documents from "./pages/Documents";
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -36,7 +37,12 @@ const App = () => (
         />
         <Route
           path={RouteConstants.APPOINTMENT_ROUTE}
-          element={<ProtectedRoute element={<Dashboard />} />}
+          element={<ProtectedRoute element={<Appointments />} />}
+        />
+
+        <Route
+          path={RouteConstants.DOCUMENT_ROUTE}
+          element={<ProtectedRoute element={<Documents />} />}
         />
       </Routes>
     </Router>
