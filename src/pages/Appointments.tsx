@@ -51,11 +51,15 @@ const Appointments = () => {
         setLoading(true);
         const response = await getAppointments(appointmentParams);
         setLoading(false);
-        const ownAppointmentList = response.data?.data.ownAppointments;
+        let ownAppointmentList = [];
+        if (response.success) {
+            ownAppointmentList = response.data?.data.ownAppointments;
+        }
         if (!ownAppointmentList || ownAppointmentList.length === 0) {
             setIsOwnAppointmentsEmpty(true);
             return;
         }
+        setIsOwnAppointmentsEmpty(false);
         setPageLimit(response.data?.data.totalPages);
         setOwnAppointments(ownAppointmentList);
     };
@@ -115,96 +119,116 @@ const Appointments = () => {
         );
     };
 
-    const ownAppointmentsComponent = () => {
-        if (isOwnAppointmentsEmpty) {
-            return (
+    const searchAndFilter = () => {
+        return (
+            <>
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <Tabs
+                        centered
+                        value={appointmentParams.status}
+                        onChange={(_event: React.SyntheticEvent, newValue: any) => {
+                            setAppointmentParams({
+                                ...appointmentParams,
+                                status: newValue,
+                            });
+                        }}
+                        sx={{
+                            width: "100%", // Set the desired width
+                            maxWidth: { xs: "100vw", md: "400px" }, // Optional: Limit max width
+                        }}
+                    >
+                        <Tab label="All" value="all" />
+                        <Tab label="Upcoming" value="upcoming" />
+                        <Tab label="Completed" value="completed" />
+                        <Tab label="Cancelled" value="cancelled" />
+                    </Tabs>
+                </Box>
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Stack spacing={2} direction="row">
+                        <DateTimePicker
+                            label="Start Date & Time"
+                            value={
+                                appointmentParams.startDate
+                                    ? dayjs(appointmentParams.startDate, DATE_TIME_FORMAT)
+                                    : null
+                            }
+                            onChange={(newValue) =>
+                                setAppointmentParams({
+                                    ...appointmentParams,
+                                    startDate: newValue
+                                        ? newValue.format(DATE_TIME_FORMAT)
+                                        : dayjs().format(DATE_TIME_FORMAT),
+                                })
+                            }
+                        />
+
+                        <DateTimePicker
+                            label="End Date & Time"
+                            value={
+                                appointmentParams.endDate
+                                    ? dayjs(appointmentParams.endDate, DATE_TIME_FORMAT)
+                                    : null
+                            }
+                            onChange={(newValue) =>
+                                setAppointmentParams({
+                                    ...appointmentParams,
+                                    endDate: newValue
+                                        ? newValue.format(DATE_TIME_FORMAT)
+                                        : dayjs().format(DATE_TIME_FORMAT),
+                                })
+                            }
+                            minDateTime={dayjs(appointmentParams.startDate, DATE_TIME_FORMAT)} // Prevent end date from being before start date
+                        />
+                    </Stack>
+                </LocalizationProvider>
+            </>
+        );
+    };
+
+    const appointmentGrid = () => {
+        return (
+            <>
+                <Grid container sx={{ marginTop: 2, alignItems: "center" }} spacing={2}>
+                    {ownAppointments.map((appointment: any) => (
+                        <Grid key={appointment.id} size={{ xs: 12, md: 4 }}>
+                            <AppointmentCard
+                                appointment={appointment}
+                                onCancel={handleCreated}
+                                onReschedule={handleCreated}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
+                <Box sx={{ justifyItems: "center" }}>
+                    <Pagination
+                        count={pageLimit}
+                        color="primary"
+                        onChange={(_event, page) =>
+                            setAppointmentParams({ ...appointmentParams, page: page })
+                        }
+                    />
+                </Box>
+            </>
+        );
+    };
+
+    const noAppointmentsMessage = () => {
+        return (
+            <>
                 <Typography variant="h6" sx={{ textAlign: "center" }}>
                     You have no appointments for the selected dates
                 </Typography>
-            );
-        }
+            </>
+        );
+    };
+
+    const ownAppointmentsComponent = () => {
         return (
             <>
                 <Stack spacing={2}>
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <Tabs
-                            centered
-                            value={appointmentParams.status}
-                            onChange={(_event: React.SyntheticEvent, newValue: any) => {
-                                setAppointmentParams({
-                                    ...appointmentParams,
-                                    status: newValue,
-                                });
-                            }}
-                            sx={{
-                                width: "100%", // Set the desired width
-                                maxWidth: { xs: "100vw", md: "400px" }, // Optional: Limit max width
-                            }}
-                        >
-                            <Tab label="All" value="all" />
-                            <Tab label="Upcoming" value="upcoming" />
-                            <Tab label="Completed" value="completed" />
-                            <Tab label="Cancelled" value="cancelled" />
-                        </Tabs>
-                    </Box>
-
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Stack spacing={2} direction="row">
-                            <DateTimePicker
-                                label="Start Date & Time"
-                                value={dayjs(appointmentParams.startDate, DATE_TIME_FORMAT)}
-                                onChange={(newValue) =>
-                                    setAppointmentParams({
-                                        ...appointmentParams,
-                                        startDate: newValue
-                                            ? newValue.format(DATE_TIME_FORMAT)
-                                            : dayjs().format(DATE_TIME_FORMAT),
-                                    })
-                                }
-                            />
-
-                            <DateTimePicker
-                                label="End Date & Time"
-                                value={dayjs(appointmentParams.endDate, DATE_TIME_FORMAT)}
-                                onChange={(newValue) =>
-                                    setAppointmentParams({
-                                        ...appointmentParams,
-                                        endDate: newValue
-                                            ? newValue.format(DATE_TIME_FORMAT)
-                                            : dayjs().format(DATE_TIME_FORMAT),
-                                    })
-                                }
-                                minDateTime={dayjs(
-                                    appointmentParams.startDate,
-                                    DATE_TIME_FORMAT
-                                )} // Prevent end date from being before start date
-                            />
-                        </Stack>
-                    </LocalizationProvider>
-                    <Grid
-                        container
-                        sx={{ marginTop: 2, alignItems: "center" }}
-                        spacing={2}
-                    >
-                        {ownAppointments.map((appointment: any) => (
-                            <Grid key={appointment.id} size={{ xs: 12, md: 4 }}>
-                                <AppointmentCard
-                                    appointment={appointment}
-                                    onCancel={handleCreated}
-                                    onReschedule={handleCreated}
-                                />
-                            </Grid>
-                        ))}
-                    </Grid>
-                    <Box sx={{ justifyItems: "center" }}>
-                        <Pagination
-                            count={pageLimit}
-                            color="primary"
-                            onChange={(_event, page) =>
-                                setAppointmentParams({ ...appointmentParams, page: page })
-                            }
-                        />
-                    </Box>
+                    {searchAndFilter()}
+                    {isOwnAppointmentsEmpty ? noAppointmentsMessage() : appointmentGrid()}
                 </Stack>
             </>
         );
