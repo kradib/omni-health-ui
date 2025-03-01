@@ -10,7 +10,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_INPUT_FORMAT } from "../Constants";
-
+import { useTheme } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 interface IAppointmentSlotPickerProps {
     onChange?: any;
     appointmentDateTime?: string;
@@ -44,6 +45,10 @@ const AppointmentSlotPicker: React.FC<IAppointmentSlotPickerProps> = ({
     onChange,
     appointmentDateTime,
 }) => {
+    const theme = useTheme();
+
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
     const inputDate = appointmentDateTime
         ? dayjs(appointmentDateTime, DATE_TIME_FORMAT)
         : undefined;
@@ -53,7 +58,6 @@ const AppointmentSlotPicker: React.FC<IAppointmentSlotPickerProps> = ({
         : undefined;
 
     let defaultDate = dayjs();
-    console.log("Def date", defaultDate.format(DATE_FORMAT));
     let allowedSlots = getAllowedSlots(defaultDate, dayjs());
 
     if (allowedSlots.length == 0) {
@@ -129,7 +133,7 @@ const AppointmentSlotPicker: React.FC<IAppointmentSlotPickerProps> = ({
                             <Grid key={timeSlot} size={{ xs: 4 }}>
                                 <Button
                                     variant={selectedTime == timeSlot ? "contained" : "outlined"}
-                                    size="large"
+                                    size={isSmallScreen ? "medium" : "large"}
                                     color="primary"
                                     key={timeSlot}
                                     value={timeSlot}

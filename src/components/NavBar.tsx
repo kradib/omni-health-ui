@@ -53,6 +53,11 @@ const NavBar = ({
         navigate(`/${RouteConstants.LOGIN_ROUTE}`);
     };
 
+    const navigateToPage = (route: string) => {
+        navigate(`/${route}`);
+        handleDrawerToggle();
+    };
+
     const drawer = (
         <div>
             <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -94,7 +99,7 @@ const NavBar = ({
                     <ListItem key="appointment" disablePadding>
                         <ListItemButton
                             onClick={() => {
-                                navigate(`/${RouteConstants.APPOINTMENT_ROUTE}`);
+                                navigateToPage(RouteConstants.APPOINTMENT_ROUTE);
                             }}
                         >
                             <ListItemIcon>
@@ -107,7 +112,7 @@ const NavBar = ({
                     <ListItem key="documents" disablePadding>
                         <ListItemButton
                             onClick={() => {
-                                navigate(`/${RouteConstants.DOCUMENT_ROUTE}`);
+                                navigateToPage(RouteConstants.DOCUMENT_ROUTE);
                             }}
                         >
                             <ListItemIcon>
