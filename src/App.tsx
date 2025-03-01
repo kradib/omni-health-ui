@@ -37,12 +37,12 @@ const App = () => (
         />
         <Route
           path={RouteConstants.APPOINTMENT_ROUTE}
-          element={<ProtectedRoute element={<Appointments />} />}
+          element={<ProtectedRoute title="Appointments" element={<Appointments />} />}
         />
 
         <Route
           path={RouteConstants.DOCUMENT_ROUTE}
-          element={<ProtectedRoute element={<Documents />} />}
+          element={<ProtectedRoute title="Documents" element={<Documents />} />}
         />
       </Routes>
     </Router>

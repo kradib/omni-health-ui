@@ -22,7 +22,13 @@ import { useNavigate } from "react-router";
 
 const drawerWidth = 300;
 
-const NavBar = ({ children }: { children: React.ReactNode }) => {
+const NavBar = ({
+    title,
+    children,
+}: {
+    title: string;
+    children: React.ReactNode;
+}) => {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
 
@@ -163,7 +169,7 @@ const NavBar = ({ children }: { children: React.ReactNode }) => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                        Responsive drawer
+                        {title}
                     </Typography>
                 </Toolbar>
             </AppBar>
