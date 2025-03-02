@@ -19,6 +19,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { AUTH_TOKEN_KEY, RouteConstants } from "../Constants";
 import { useNavigate } from "react-router";
+import { getUserDetailFromLocalStorage } from "../utils/Utils";
 
 const drawerWidth = 300;
 
@@ -58,6 +59,8 @@ const NavBar = ({
         handleDrawerToggle();
     };
 
+    const userDetails = getUserDetailFromLocalStorage();
+
     const drawer = (
         <div>
             <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -82,10 +85,8 @@ const NavBar = ({
                                     alignItems: "left",
                                 }}
                             >
-                                <Typography variant="h6">John Doe</Typography>
-                                <Typography variant="body2">
-                                    jcsddasdsaddoe@gmail.com
-                                </Typography>
+                                <Typography variant="h6">{`${userDetails.firstName} ${userDetails.lastName}`}</Typography>
+                                <Typography variant="body2">{userDetails.email}</Typography>
                             </Stack>
                         </Box>
                     </Stack>

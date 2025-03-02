@@ -5,15 +5,19 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useState } from "react";
-import { AUTH_TOKEN_KEY, RouteConstants } from "../Constants";
+import { AUTH_TOKEN_KEY, RouteConstants, USER_DETAILS_KEY } from "../Constants";
 import { signinUser } from "../api/user";
 import { useNavigate } from "react-router";
 import Toast from "../components/Toast";
 import LoadingComponent from "../components/LoadingComponent";
 import PasswordField from "../components/PasswordField";
 
-const saveTokenToLocalStorage = (token: string) => {
+const saveTokenAndUserDetailsToLocalStorage = (
+    token: string,
+    userDetails: object
+) => {
     localStorage.setItem(AUTH_TOKEN_KEY, token);
+    localStorage.setItem(USER_DETAILS_KEY, JSON.stringify(userDetails));
 };
 
 const Login = () => {
@@ -35,7 +39,8 @@ const Login = () => {
         if (response.success) {
             // Set bearer token
             const token = response.data.authToken;
-            saveTokenToLocalStorage(token);
+            const userDetails = response.data.userDetail;
+            saveTokenAndUserDetailsToLocalStorage(token, userDetails);
             navigate(`/${RouteConstants.APPOINTMENT_ROUTE}`);
             return;
         }
