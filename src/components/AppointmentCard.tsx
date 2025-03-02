@@ -33,26 +33,54 @@ const statusStyle = {
     p: 0.5,
 };
 
-const UPCOMING_APPOINTMENT_STATUS = "Upcoming";
+const PENDING_APPOINTMENT_STATUS = "Pending";
+const PAST_DUE_APPOINTMENT_STATUS = "Past due";
 const COMPLETED_APPOINTMENT_STATUS = "Completed";
+const CONFIRMED_APPOINTMENT_STATUS = "Confirmed";
 const CANCELLED_APPOINTMENT_STATUS = "Cancelled";
 
+const EDITABLE_APPOINT_STATUS = [
+    PENDING_APPOINTMENT_STATUS,
+    CONFIRMED_APPOINTMENT_STATUS,
+];
+
 const getAppointmentStatus: any = (appointment: any) => {
-    if (appointment.status == 2) {
+    if (
+        appointment.appointmentStatus.toLocaleLowerCase() ==
+        CANCELLED_APPOINTMENT_STATUS.toLocaleLowerCase()
+    ) {
         return {
             appointmentStatus: CANCELLED_APPOINTMENT_STATUS,
             statusColor: "#cf2b2b",
         };
     }
-    if (dayjs(appointment.appointmentDateTime).isBefore(dayjs())) {
+    if (
+        appointment.appointmentStatus.toLocaleLowerCase() ==
+        COMPLETED_APPOINTMENT_STATUS.toLocaleLowerCase()
+    ) {
         return {
             appointmentStatus: COMPLETED_APPOINTMENT_STATUS,
-            statusColor: "#1bd176",
+            statusColor: "#1f97ed",
+        };
+    }
+    if (dayjs(appointment.appointmentDateTime).isBefore(dayjs())) {
+        return {
+            appointmentStatus: PAST_DUE_APPOINTMENT_STATUS,
+            statusColor: "#eb345b",
+        };
+    }
+    if (
+        appointment.appointmentStatus.toLocaleLowerCase() ==
+        CONFIRMED_APPOINTMENT_STATUS.toLocaleLowerCase()
+    ) {
+        return {
+            appointmentStatus: CONFIRMED_APPOINTMENT_STATUS,
+            statusColor: "#0ec26e",
         };
     }
     return {
-        appointmentStatus: UPCOMING_APPOINTMENT_STATUS,
-        statusColor: "#1b91d1",
+        appointmentStatus: PENDING_APPOINTMENT_STATUS,
+        statusColor: "#c2800e",
     };
 };
 
@@ -113,13 +141,19 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
     };
 
     const rescheduleModal = () => {
+        const appointmentDetail = {
+            appointmentDateTime: appointment.appointmentDateTime,
+            appointmentPlace: appointment.doctorDetail.location,
+            doctorId: appointment.doctorDetail.id,
+        };
+
         return (
             <CreateAppointmentModal
                 show={showRescheduleModal}
                 handleCreated={handleRescheduled}
                 handleClose={handleClose}
                 isRescheduling={true}
-                rescheduleAppointmentDetails={appointment}
+                rescheduleAppointmentDetails={appointmentDetail}
                 appointmentId={appointment.id}
             />
         );
@@ -143,7 +177,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                         sx={{ justifyContent: "space-between", alignItems: "center" }}
                         direction="row"
                     >
-                        <Typography variant="h2">{appointment.doctorName}</Typography>
+                        <Typography variant="h2">{`${appointment.doctorDetail.firstName} ${appointment.doctorDetail.lastName}`}</Typography>
                         <Box
                             sx={{
                                 ...statusStyle,
@@ -190,7 +224,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                         direction="row"
                         spacing={2}
                     >
-                        {appointmentStatus == UPCOMING_APPOINTMENT_STATUS && (
+                        {EDITABLE_APPOINT_STATUS.includes(appointmentStatus) && (
                             <>
                                 <Button
                                     variant="outlined"

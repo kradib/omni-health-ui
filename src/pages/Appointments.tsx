@@ -31,13 +31,13 @@ const Appointments = () => {
     const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
         "success"
     );
-    const [isOwnAppointmentsEmpty, setIsOwnAppointmentsEmpty] = useState(false);
+    const [isAppointmentListEmpty, setIsAppointmentListEmpty] = useState(false);
     const [isLoading, setLoading] = useState(false);
     const [pageLimit, setPageLimit] = useState(0);
     const [appointmentParams, setAppointmentParams] =
         useState<IGetAppointmentsParams>({
             status: "all",
-            page: 1,
+            page: 0,
             size: DEFAULT_PAGE_SIZE,
         });
 
@@ -45,23 +45,23 @@ const Appointments = () => {
         setOpenToast(false);
     };
 
-    const [ownAppointments, setOwnAppointments] = useState([]);
+    const [appointmentList, setAppointmentList] = useState([]);
 
     const getAppointmentList = async () => {
         setLoading(true);
         const response = await getAppointments(appointmentParams);
         setLoading(false);
-        let ownAppointmentList = [];
+        let appointmentList = [];
         if (response.success) {
-            ownAppointmentList = response.data?.data.ownAppointments;
+            appointmentList = response.data?.data.appointments;
         }
-        if (!ownAppointmentList || ownAppointmentList.length === 0) {
-            setIsOwnAppointmentsEmpty(true);
+        if (!appointmentList || appointmentList.length === 0) {
+            setIsAppointmentListEmpty(true);
             return;
         }
-        setIsOwnAppointmentsEmpty(false);
+        setIsAppointmentListEmpty(false);
         setPageLimit(response.data?.data.totalPages);
-        setOwnAppointments(ownAppointmentList);
+        setAppointmentList(appointmentList);
     };
 
     useEffect(() => {
@@ -192,7 +192,7 @@ const Appointments = () => {
         return (
             <>
                 <Grid container sx={{ marginTop: 2, alignItems: "center" }} spacing={2}>
-                    {ownAppointments.map((appointment: any) => (
+                    {appointmentList.map((appointment: any) => (
                         <Grid key={appointment.id} size={{ xs: 12, md: 6, lg: 4 }}>
                             <AppointmentCard
                                 appointment={appointment}
@@ -230,7 +230,7 @@ const Appointments = () => {
             <>
                 <Stack spacing={2}>
                     {searchAndFilter()}
-                    {isOwnAppointmentsEmpty ? noAppointmentsMessage() : appointmentGrid()}
+                    {isAppointmentListEmpty ? noAppointmentsMessage() : appointmentGrid()}
                 </Stack>
             </>
         );

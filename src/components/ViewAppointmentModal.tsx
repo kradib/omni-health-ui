@@ -135,7 +135,7 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
                     spacing={2}
                 >
                     <DoctorIcon />
-                    <Typography variant="body1">{appointment.doctorName}</Typography>
+                    <Typography variant="body1">{`${appointment.doctorDetail?.firstName} ${appointment.doctorDetail?.lastName}`}</Typography>
                 </Stack>
 
                 <Stack spacing={1}>
