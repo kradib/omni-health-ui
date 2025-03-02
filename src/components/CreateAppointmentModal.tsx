@@ -48,8 +48,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
     const initialAppointmentState = {
         appointmentDateTime: "",
         appointmentPlace: "",
-        doctorId: "",
-        doctorName: "",
+        doctorId: ""
     };
 
     const [appointment, setAppointment] = useState(
@@ -67,7 +66,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
         let response;
         if (!isRescheduling) {
             // Then new creation
-            response = await createAppointment(initialAppointmentState);
+            response = await createAppointment(appointment);
         } else {
             // Else reschedule
             response = await rescheduleAppointment(appointmentId, appointment);
@@ -150,7 +149,6 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                                     setAppointment({
                                         ...appointment,
                                         doctorId: `${value.id}`,
-                                        doctorName: `${value.firstName} ${value.lastName}`,
                                         appointmentPlace: value.location,
                                     });
                                     setSelectedDoctor(value);
