@@ -36,7 +36,7 @@ const AppointmentsGridComponent = ({
     const [pageLimit, setPageLimit] = useState(0);
     const [appointmentParams, setAppointmentParams] =
         useState<IGetAppointmentsParams>({
-            status: "all",
+            status: undefined,
             page: 0,
             size: DEFAULT_PAGE_SIZE,
         });
@@ -80,8 +80,15 @@ const AppointmentsGridComponent = ({
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <Tabs
                         centered
-                        value={appointmentParams.status}
+                        value={appointmentParams.status || "all"}
                         onChange={(_event: React.SyntheticEvent, newValue: any) => {
+                            if (newValue == "all") {
+                                setAppointmentParams({
+                                    ...appointmentParams,
+                                    status: undefined,
+                                });
+                                return;
+                            }
                             setAppointmentParams({
                                 ...appointmentParams,
                                 status: newValue,
@@ -93,7 +100,7 @@ const AppointmentsGridComponent = ({
                         }}
                     >
                         <Tab label="All" value="all" />
-                        <Tab label="Upcoming" value="upcoming" />
+                        <Tab label="Confirmed" value="confirmed" />
                         <Tab label="Completed" value="completed" />
                         <Tab label="Cancelled" value="cancelled" />
                     </Tabs>
