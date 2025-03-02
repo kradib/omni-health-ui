@@ -4,6 +4,7 @@ export const enum RouteConstants {
   FORGOT_PASSWORD_ROUTE = "forgot-password",
   APPOINTMENT_ROUTE = "appointments",
   DOCUMENT_ROUTE = "documents",
+  HELP_CENTER_ROUTE = "support",
 }
 
 export class ApiRoutes {

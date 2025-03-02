@@ -80,6 +80,11 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Inter, sans-serif",
+    h1: {
+      fontSize: 30,
+      fontWeight: "bold",
+      color: "#000000",
+    },
     h2: {
       fontSize: 16,
       fontWeight: "bold",

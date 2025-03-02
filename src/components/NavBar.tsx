@@ -130,7 +130,7 @@ const NavBar = ({
                     <ListItem key="help" disablePadding>
                         <ListItemButton
                             onClick={() => {
-                                console.log("Appointment");
+                                navigateToPage(RouteConstants.HELP_CENTER_ROUTE);
                             }}
                         >
                             <ListItemIcon>

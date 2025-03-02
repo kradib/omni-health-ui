@@ -15,6 +15,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import Documents from "./pages/Documents";
 import CssBaseline from '@mui/material/CssBaseline';
+import HelpCenter from "./pages/HelpCenter";
+
 const App = () => (
   <ThemeProvider theme={theme}>
     <CssBaseline enableColorScheme />
@@ -40,10 +42,13 @@ const App = () => (
           path={RouteConstants.APPOINTMENT_ROUTE}
           element={<ProtectedRoute title="Appointments" element={<Appointments />} />}
         />
-
         <Route
           path={RouteConstants.DOCUMENT_ROUTE}
           element={<ProtectedRoute title="Documents" element={<Documents />} />}
+        />
+        <Route
+          path={RouteConstants.HELP_CENTER_ROUTE}
+          element={<ProtectedRoute title="Documents" element={<HelpCenter />} />}
         />
       </Routes>
     </Router>
