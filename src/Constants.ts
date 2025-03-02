@@ -3,6 +3,7 @@ export const enum RouteConstants {
   REGISTER_ROUTE = "register",
   FORGOT_PASSWORD_ROUTE = "forgot-password",
   APPOINTMENT_ROUTE = "appointments",
+  DEPENDENT_APPOINTMENT_ROUTE = "dependent-appointments",
   DOCUMENT_ROUTE = "documents",
   HELP_CENTER_ROUTE = "support",
 }
@@ -20,6 +21,8 @@ export class ApiRoutes {
   public static FORGOT_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/forget-password`;
   public static RESET_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/reset-password`;
 
+  public static DEPENDENT_APPOINTMENT_ROUTE = `${this.APPOINTMENT_BASE_ROUTE}/dependents`;
+
   public static UPLOAD_FILE_ROUTE = `${this.DOCUMENT_BASE_ROUTE}/upload`;
 }
 
@@ -36,3 +39,6 @@ export const SUPPORTED_FILE_TYPES_FOR_UPLOAD = [
   "application/pdf",
   "image/jpeg",
 ];
+
+export const APPOINTMENT_MODE_OWN = 'own';
+export const APPOINTMENT_MODE_DEPENDENT = 'dependent'

@@ -5,6 +5,7 @@ import { useState } from "react";
 import CreateAppointmentModal from "../components/CreateAppointmentModal";
 import Toast from "../components/Toast";
 import AppointmentsGridComponent from "../components/AppointmentGridComponent";
+import { APPOINTMENT_MODE_OWN } from "../Constants";
 
 const Appointments = () => {
     const theme = useTheme();
@@ -79,6 +80,7 @@ const Appointments = () => {
             {createAppointment()}
             <AppointmentsGridComponent
                 key={appointmentsChanged}
+                mode={APPOINTMENT_MODE_OWN}
                 title="My Appointments"
             />
         </>

@@ -14,8 +14,9 @@ import PublicRoute from "./components/PublicRoute";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import Documents from "./pages/Documents";
-import CssBaseline from '@mui/material/CssBaseline';
+import CssBaseline from "@mui/material/CssBaseline";
 import HelpCenter from "./pages/HelpCenter";
+import DependentAppointments from "./pages/DependentAppointments";
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -40,7 +41,18 @@ const App = () => (
         />
         <Route
           path={RouteConstants.APPOINTMENT_ROUTE}
-          element={<ProtectedRoute title="Appointments" element={<Appointments />} />}
+          element={
+            <ProtectedRoute title="Appointments" element={<Appointments />} />
+          }
+        />
+        <Route
+          path={RouteConstants.DEPENDENT_APPOINTMENT_ROUTE}
+          element={
+            <ProtectedRoute
+              title="Dependent Appointments"
+              element={<DependentAppointments />}
+            />
+          }
         />
         <Route
           path={RouteConstants.DOCUMENT_ROUTE}
@@ -48,7 +60,9 @@ const App = () => (
         />
         <Route
           path={RouteConstants.HELP_CENTER_ROUTE}
-          element={<ProtectedRoute title="Documents" element={<HelpCenter />} />}
+          element={
+            <ProtectedRoute title="Help Center" element={<HelpCenter />} />
+          }
         />
       </Routes>
     </Router>

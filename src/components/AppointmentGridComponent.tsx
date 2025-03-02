@@ -19,7 +19,13 @@ import Tabs from "@mui/material/Tabs";
 
 const DEFAULT_PAGE_SIZE = 6;
 
-const AppointmentsGridComponent = ({ title }: { title: string }) => {
+const AppointmentsGridComponent = ({
+    title,
+    mode,
+}: {
+    title: string;
+    mode: string;
+}) => {
     const [openToast, setOpenToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
@@ -39,7 +45,7 @@ const AppointmentsGridComponent = ({ title }: { title: string }) => {
 
     const getAppointmentList = async () => {
         setLoading(true);
-        const response = await getAppointments(appointmentParams);
+        const response = await getAppointments(appointmentParams, mode);
         setLoading(false);
         let appointmentList = [];
         if (response.success) {
@@ -143,6 +149,7 @@ const AppointmentsGridComponent = ({ title }: { title: string }) => {
                         <Grid key={appointment.id} size={{ xs: 12, md: 6, lg: 4 }}>
                             <AppointmentCard
                                 appointment={appointment}
+                                mode={mode}
                                 onCancel={handleAppointmentUpdated}
                                 onReschedule={handleAppointmentUpdated}
                             />

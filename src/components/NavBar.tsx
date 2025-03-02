@@ -110,6 +110,19 @@ const NavBar = ({
                         </ListItemButton>
                     </ListItem>
 
+                    <ListItem key="dependent-appointment" disablePadding>
+                        <ListItemButton
+                            onClick={() => {
+                                navigateToPage(RouteConstants.DEPENDENT_APPOINTMENT_ROUTE);
+                            }}
+                        >
+                            <ListItemIcon>
+                                <CalendarMonthIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Dependent Appointments" />
+                        </ListItemButton>
+                    </ListItem>
+
                     <ListItem key="documents" disablePadding>
                         <ListItemButton
                             onClick={() => {

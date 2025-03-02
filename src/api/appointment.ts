@@ -1,4 +1,7 @@
-import { ApiRoutes } from "../Constants";
+import {
+  ApiRoutes,
+  APPOINTMENT_MODE_DEPENDENT
+} from "../Constants";
 import { IAppointmentDetails } from "../interface/IAppointmentDetails";
 import { IGetAppointmentsParams } from "../interface/IGetAppointmentsParams";
 import { IRequest, RequestMethod } from "../interface/IRequest";
@@ -11,7 +14,7 @@ export const createAppointment = async (
     method: RequestMethod.POST,
     message: appointmentDetails,
     url: ApiRoutes.APPOINTMENT_BASE_ROUTE,
-    isAuthRequired: true
+    isAuthRequired: true,
   };
 
   const response = await sendRequest(request);
@@ -26,12 +29,18 @@ export const createAppointment = async (
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
-export const getAppointments = async (params: IGetAppointmentsParams) => {
+export const getAppointments = async (
+  params: IGetAppointmentsParams,
+  mode: string
+) => {
   const request: IRequest = {
     method: RequestMethod.GET,
-    url: ApiRoutes.APPOINTMENT_BASE_ROUTE,
+    url:
+      mode == APPOINTMENT_MODE_DEPENDENT
+        ? ApiRoutes.DEPENDENT_APPOINTMENT_ROUTE
+        : ApiRoutes.APPOINTMENT_BASE_ROUTE,
     isAuthRequired: true,
-    queryParams: params
+    queryParams: params,
   };
 
   const response = await sendRequest(request);
@@ -50,7 +59,7 @@ export const getAppointment = async (appointmentId: number) => {
   const request: IRequest = {
     method: RequestMethod.GET,
     url: `${ApiRoutes.APPOINTMENT_BASE_ROUTE}/${appointmentId}`,
-    isAuthRequired: true
+    isAuthRequired: true,
   };
 
   const response = await sendRequest(request);
@@ -65,7 +74,6 @@ export const getAppointment = async (appointmentId: number) => {
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
-
 export const rescheduleAppointment = async (
   appointmentId: number,
   appointmentDetails: IAppointmentDetails
@@ -74,7 +82,7 @@ export const rescheduleAppointment = async (
     method: RequestMethod.PATCH,
     message: appointmentDetails,
     url: `${ApiRoutes.APPOINTMENT_BASE_ROUTE}/${appointmentId}`,
-    isAuthRequired: true
+    isAuthRequired: true,
   };
 
   const response = await sendRequest(request);

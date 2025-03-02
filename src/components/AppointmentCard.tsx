@@ -13,8 +13,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import CreateAppointmentModal from "./CreateAppointmentModal";
 import ViewAppointmentModal from "./ViewAppointmentModal";
+import { APPOINTMENT_MODE_DEPENDENT } from "../Constants";
+import Chip from "@mui/material/Chip";
+import { stringToColour } from "../utils/Utils";
 interface IAppointmentCardProps {
     appointment: any;
+    mode: string;
     onCancel?: any;
     onReschedule?: any;
 }
@@ -86,6 +90,7 @@ const getAppointmentStatus: any = (appointment: any) => {
 
 const AppointmentCard: React.FC<IAppointmentCardProps> = ({
     appointment,
+    mode,
     onCancel,
     onReschedule,
 }) => {
@@ -163,11 +168,15 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
         return (
             <ViewAppointmentModal
                 show={showViewModal}
+                mode={mode}
                 handleClose={() => setShowViewModal(false)}
                 appointmentId={appointment.id}
             />
         );
     };
+
+    const appointmentUserName = `${appointment.userDetail?.firstName} ${appointment.userDetail?.lastName}`;
+    const username = appointment.username;
 
     return (
         <>
@@ -178,15 +187,26 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                         direction="row"
                     >
                         <Typography variant="h2">{`${appointment.doctorDetail.firstName} ${appointment.doctorDetail.lastName}`}</Typography>
-                        <Box
-                            sx={{
-                                ...statusStyle,
-                                color: statusColor,
-                                borderColor: statusColor,
-                            }}
-                        >
-                            <Typography variant="body2">{appointmentStatus}</Typography>
-                        </Box>
+                        <Stack direction="row" spacing={2}>
+                            {mode == APPOINTMENT_MODE_DEPENDENT && (
+                                <Chip
+                                    label={appointmentUserName}
+                                    sx={{
+                                        backgroundColor: stringToColour(username),
+                                        color: "#fff", // White text for contrast
+                                    }}
+                                />
+                            )}
+                            <Box
+                                sx={{
+                                    ...statusStyle,
+                                    color: statusColor,
+                                    borderColor: statusColor,
+                                }}
+                            >
+                                <Typography variant="body2">{appointmentStatus}</Typography>
+                            </Box>
+                        </Stack>
                     </Stack>
                     <Box
                         sx={{
@@ -224,23 +244,24 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                         direction="row"
                         spacing={2}
                     >
-                        {EDITABLE_APPOINT_STATUS.includes(appointmentStatus) && (
-                            <>
-                                <Button
-                                    variant="outlined"
-                                    onClick={() => setCancellationConfirmation(true)}
-                                    color="error"
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => setShowRescheduleModal(true)}
-                                >
-                                    Reschedule
-                                </Button>
-                            </>
-                        )}
+                        {EDITABLE_APPOINT_STATUS.includes(appointmentStatus) &&
+                            mode != APPOINTMENT_MODE_DEPENDENT && (
+                                <>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={() => setCancellationConfirmation(true)}
+                                        color="error"
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => setShowRescheduleModal(true)}
+                                    >
+                                        Reschedule
+                                    </Button>
+                                </>
+                            )}
                         <Button variant="contained" onClick={() => setShowViewModal(true)}>
                             View Details
                         </Button>

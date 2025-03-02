@@ -14,9 +14,11 @@ import { useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DownloadIcon from "@mui/icons-material/Download";
 import SpeakerNotesOutlinedIcon from "@mui/icons-material/SpeakerNotesOutlined";
+import { APPOINTMENT_MODE_OWN } from "../Constants";
 
 interface ViewAppointmentModalProps {
     show: boolean;
+    mode: string;
     appointmentId: number;
     handleClose: any;
 }
@@ -34,6 +36,7 @@ const appointmentNotesStyle = {
 
 const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
     show,
+    mode,
     appointmentId,
     handleClose,
 }) => {
@@ -89,15 +92,14 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
         getAppointmentDetails();
     }, []);
 
+    const title =
+        mode == APPOINTMENT_MODE_OWN
+            ? `Your Appointment Details`
+            : `${appointment.userDetail?.firstName} ${appointment.userDetail?.lastName}'s Appointment Details`;
+
     return (
         <>
-            <ModalComponent
-                open={show}
-                onClose={handleClose}
-                title="Appointment Details"
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
+            <ModalComponent open={show} onClose={handleClose} title={title}>
                 {isLoading && <LoadingComponent isLoading={isLoading} />}
                 {errorMessage && (
                     <Typography variant="h4" sx={{ color: "red" }}>
