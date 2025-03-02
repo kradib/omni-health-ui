@@ -15,6 +15,7 @@ import IconButton from "@mui/material/IconButton";
 import DownloadIcon from "@mui/icons-material/Download";
 import SpeakerNotesOutlinedIcon from "@mui/icons-material/SpeakerNotesOutlined";
 import { APPOINTMENT_MODE_OWN } from "../Constants";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 interface ViewAppointmentModalProps {
     show: boolean;
@@ -138,6 +139,17 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
                 >
                     <DoctorIcon />
                     <Typography variant="body1">{`${appointment.doctorDetail?.firstName} ${appointment.doctorDetail?.lastName}`}</Typography>
+                </Stack>
+
+                <Stack
+                    sx={{ justifyContent: "left", alignItems: "center" }}
+                    direction="row"
+                    spacing={2}
+                >
+                    <LocationOnOutlinedIcon />
+                    <Typography variant="body1">
+                        {appointment.doctorDetail?.location}
+                    </Typography>
                 </Stack>
 
                 <Stack spacing={1}>

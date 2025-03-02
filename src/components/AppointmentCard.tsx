@@ -16,6 +16,8 @@ import ViewAppointmentModal from "./ViewAppointmentModal";
 import { APPOINTMENT_MODE_DEPENDENT } from "../Constants";
 import Chip from "@mui/material/Chip";
 import { stringToColour } from "../utils/Utils";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+
 interface IAppointmentCardProps {
     appointment: any;
     mode: string;
@@ -215,27 +217,39 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                             p: 2,
                         }}
                     >
-                        <Stack
-                            sx={{ justifyContent: "left", alignItems: "center", mb: 1 }}
-                            direction="row"
-                            spacing={2}
-                        >
-                            <CalendarMonthIcon />
-                            <Typography variant="body2">
-                                {dayjs(appointment.appointmentDateTime).format(
-                                    "dddd, D MMMM, YYYY"
-                                )}
-                            </Typography>
-                        </Stack>
-                        <Stack
-                            sx={{ justifyContent: "left", alignItems: "center" }}
-                            direction="row"
-                            spacing={2}
-                        >
-                            <AccessTimeIcon />
-                            <Typography variant="body2">
-                                {dayjs(appointment.appointmentDateTime).format("h:mm A")}
-                            </Typography>
+                        <Stack spacing={0.5}>
+                            <Stack
+                                sx={{ justifyContent: "left", alignItems: "center" }}
+                                direction="row"
+                                spacing={2}
+                            >
+                                <CalendarMonthIcon />
+                                <Typography variant="body2">
+                                    {dayjs(appointment.appointmentDateTime).format(
+                                        "dddd, D MMMM, YYYY"
+                                    )}
+                                </Typography>
+                            </Stack>
+                            <Stack
+                                sx={{ justifyContent: "left", alignItems: "center" }}
+                                direction="row"
+                                spacing={2}
+                            >
+                                <AccessTimeIcon />
+                                <Typography variant="body2">
+                                    {dayjs(appointment.appointmentDateTime).format("h:mm A")}
+                                </Typography>
+                            </Stack>
+                            <Stack
+                                sx={{ justifyContent: "left", alignItems: "center" }}
+                                direction="row"
+                                spacing={2}
+                            >
+                                <LocationOnOutlinedIcon />
+                                <Typography variant="body2">
+                                    {appointment.doctorDetail?.location}
+                                </Typography>
+                            </Stack>
                         </Stack>
                     </Box>
 
