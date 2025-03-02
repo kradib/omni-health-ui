@@ -190,22 +190,25 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                         direction="row"
                         spacing={2}
                     >
-                        <Button
-                            disabled={appointmentStatus != UPCOMING_APPOINTMENT_STATUS}
-                            variant="outlined"
-                            onClick={() => setCancellationConfirmation(true)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            disabled={appointmentStatus != UPCOMING_APPOINTMENT_STATUS}
-                            variant="contained"
-                            onClick={() => setShowRescheduleModal(true)}
-                        >
-                            Reschedule
-                        </Button>
+                        {appointmentStatus == UPCOMING_APPOINTMENT_STATUS && (
+                            <>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => setCancellationConfirmation(true)}
+                                    color="error"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => setShowRescheduleModal(true)}
+                                >
+                                    Reschedule
+                                </Button>
+                            </>
+                        )}
                         <Button variant="contained" onClick={() => setShowViewModal(true)}>
-                            View
+                            View Details
                         </Button>
                     </Stack>
                 </Stack>
