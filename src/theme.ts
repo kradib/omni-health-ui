@@ -2,6 +2,27 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+          /* Scrollbar styles */
+          "::-webkit-scrollbar": {
+              width: "3px",
+              height: "3px", // For horizontal scroll
+          },
+          "::-webkit-scrollbar-track": {
+              backgroundColor: "#f1f1f1",
+              borderRadius: "10px",
+          },
+          "::-webkit-scrollbar-thumb": {
+              backgroundColor: "#88898a",
+              borderRadius: "10px",
+              border: "none",
+          },
+          "::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#a3a3a3",
+          },
+      },
+  },
     MuiButton: {
       styleOverrides: {
         root: {

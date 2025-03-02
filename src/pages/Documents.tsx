@@ -1,6 +1,4 @@
 import { useTheme } from "@mui/material";
-import Box from "@mui/material/Box";
-import Pagination from "@mui/material/Pagination";
 import TablePagination from "@mui/material/TablePagination";
 import TableBody from "@mui/material/TableBody";
 import Paper from "@mui/material/Paper";

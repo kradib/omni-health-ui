@@ -14,9 +14,10 @@ import PublicRoute from "./components/PublicRoute";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import Documents from "./pages/Documents";
-
+import CssBaseline from '@mui/material/CssBaseline';
 const App = () => (
   <ThemeProvider theme={theme}>
+    <CssBaseline enableColorScheme />
     <Router>
       <Routes>
         <Route

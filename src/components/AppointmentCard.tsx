@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import CreateAppointmentModal from "./CreateAppointmentModal";
+import ViewAppointmentModal from "./ViewAppointmentModal";
 interface IAppointmentCardProps {
     appointment: any;
     onCancel?: any;
@@ -64,6 +65,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
     const [cancellationConfirmation, setCancellationConfirmation] =
         useState(false);
     const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
 
     const handleCancel = async () => {
         const response = await cancelAppointment(appointment.id);
@@ -118,6 +120,16 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                 handleClose={handleClose}
                 isRescheduling={true}
                 rescheduleAppointmentDetails={appointment}
+                appointmentId={appointment.id}
+            />
+        );
+    };
+
+    const viewModal = () => {
+        return (
+            <ViewAppointmentModal
+                show={showViewModal}
+                handleClose={() => setShowViewModal(false)}
                 appointmentId={appointment.id}
             />
         );
@@ -192,11 +204,15 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
                         >
                             Reschedule
                         </Button>
+                        <Button variant="contained" onClick={() => setShowViewModal(true)}>
+                            View
+                        </Button>
                     </Stack>
                 </Stack>
             </Box>
             {cancellationConfirmationDialog()}
             {showRescheduleModal && rescheduleModal()}
+            {showViewModal && viewModal()}
         </>
     );
 };
