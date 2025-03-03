@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { IRequest } from "../interface/IRequest";
 import { AUTH_TOKEN_KEY } from "../Constants";
 
-const BASE_URL = import.meta.env.VITE_API_URL;;
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const sendRequest = async (req: IRequest) => {
   const finalUrl = BASE_URL + req.url;
@@ -11,7 +11,8 @@ const sendRequest = async (req: IRequest) => {
     url: finalUrl,
     data: req.message,
     headers: req.headers || {},
-    params: req.queryParams
+    params: req.queryParams,
+    responseType: req.responseType,
   };
 
   if (req.isAuthRequired === true) {
@@ -23,7 +24,11 @@ const sendRequest = async (req: IRequest) => {
 
   try {
     const response = await axios(requestConfig);
-    return { status: response.status, data: response.data };
+    return {
+      status: response.status,
+      data: response.data,
+      headers: response.headers,
+    };
   } catch (err) {
     const error = err as AxiosError;
     return { status: error.status, data: error.response };
@@ -33,5 +38,5 @@ const sendRequest = async (req: IRequest) => {
 export default sendRequest;
 
 const getBearerToken = () => {
-    return localStorage.getItem(AUTH_TOKEN_KEY);
-  };
+  return localStorage.getItem(AUTH_TOKEN_KEY);
+};

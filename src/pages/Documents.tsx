@@ -1,5 +1,4 @@
 import { useTheme } from "@mui/material";
-import TablePagination from "@mui/material/TablePagination";
 import TableBody from "@mui/material/TableBody";
 import Paper from "@mui/material/Paper";
 import TableCell from "@mui/material/TableCell";
@@ -13,7 +12,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { useEffect, useState } from "react";
 import UploadDocumentModal from "../components/UploadDocumentModal";
 import Toast from "../components/Toast";
-import { getDocuments } from "../api/document";
+import { downloadFile, getDocuments } from "../api/document";
 import LoadingComponent from "../components/LoadingComponent";
 import DownloadIcon from "@mui/icons-material/Download";
 
@@ -38,18 +37,13 @@ const Documents = () => {
 
     const [documents, setDocuments] = useState([]);
 
-    const [pageNumber, setPageNumber] = useState(0);
-    const [pageSize, setPageSize] = useState(5);
-    const [totalCount, setTotalCount] = useState(0);
-
-    const getAllDocuments = () => {
+    const getAllDocuments = async () => {
         setLoading(true);
-        const response = getDocuments(pageNumber + 1, pageSize);
+        const response = await getDocuments();
         setLoading(false);
 
         if (response.success) {
-            setDocuments(response.data?.data.documents);
-            setTotalCount(response.data?.data.totalElements);
+            setDocuments(response.data?.data.documentMetaData);
         }
     };
 
@@ -66,29 +60,43 @@ const Documents = () => {
         setToastSeverity(severity);
         setOpenToast(true);
         setShowUploadModal(false);
+        getAllDocuments();
     };
 
     useEffect(() => {
         getAllDocuments();
-    }, [pageNumber, pageSize]);
+    }, []);
+
+    const handleDownloadDocument = async (docId: number) => {
+        const response = await downloadFile(docId);
+
+        // Create a Blob URL
+        const url = window.URL.createObjectURL(new Blob([response.data.file]));
+
+        // Create an invisible link and trigger the download
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Set the file name (you can get it from headers if needed)
+        link.setAttribute("download", response.data.filename);
+
+        // Add to the DOM, trigger click, and remove the element
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode?.removeChild(link);
+    };
 
     const noDocumentsComponent = () => {
-        if (documents.length == 0 && !isLoading) {
-            return (
-                <>
-                    <Typography variant="h6" sx={{ textAlign: "center" }}>
-                        You have no documents uploaded yet
-                    </Typography>
-                </>
-            );
-        }
+        return (
+            <>
+                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                    You have no documents uploaded yet
+                </Typography>
+            </>
+        );
     };
 
     const documentListComponent = () => {
-        const handleChangePage = (_event: any, page: number) => {
-            setPageNumber(page);
-        };
-
         return (
             <>
                 <LoadingComponent isLoading={isLoading} />
@@ -103,15 +111,15 @@ const Documents = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {documents.map((doc, index) => (
+                            {documents.map((doc: any, index: number) => (
                                 <TableRow key={index}>
-                                    <TableCell>{doc.name}</TableCell>
+                                    <TableCell>{doc.documentName}</TableCell>
                                     <TableCell>{doc.dateUploaded}</TableCell>
                                     <TableCell>
                                         <IconButton
                                             sx={{ color: theme.palette.primary.main }}
                                             onClick={() => {
-                                                console.log(doc.identifier);
+                                                handleDownloadDocument(doc.id);
                                             }}
                                         >
                                             <DownloadIcon />
@@ -122,25 +130,16 @@ const Documents = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10]}
-                    component="div"
-                    count={totalCount}
-                    rowsPerPage={pageSize}
-                    page={pageNumber}
-                    onPageChange={(_event, page) => setPageNumber(page)}
-                    onRowsPerPageChange={(event) =>
-                        setPageSize(parseInt(event.target.value))
-                    }
-                />
             </>
         );
     };
 
+    const isDocumentEmpty = !documents?.length;
+
     return (
         <>
-            {noDocumentsComponent()}
-            {documentListComponent()}
+            {isDocumentEmpty && noDocumentsComponent()}
+            {!isDocumentEmpty && documentListComponent()}
             <IconButton
                 sx={{
                     backgroundColor: theme.palette.primary.main,

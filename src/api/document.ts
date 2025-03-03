@@ -1,7 +1,6 @@
 import { ApiRoutes } from "../Constants";
 import { IRequest, RequestMethod } from "../interface/IRequest";
 import sendRequest from "./request";
-import docData from "./dummyDocs.json";
 
 export const uploadDocument = async (file: any, docName: string) => {
   const documentData = new FormData();
@@ -27,7 +26,48 @@ export const uploadDocument = async (file: any, docName: string) => {
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
-export const getDocuments = (pageNumber: number, pageSize: number) => {
-  console.log(pageNumber, pageSize);
-  return { success: true, data: { data: { documents: docData, totalElements: docData.length } } };
+export const getDocuments = async () => {
+  const request: IRequest = {
+    method: RequestMethod.GET,
+    url: ApiRoutes.DOCUMENT_BASE_ROUTE,
+    isAuthRequired: true,
+    queryParams: {},
+  };
+
+  const response = await sendRequest(request);
+  if (response.status == 200) {
+    return { success: true, data: response.data };
+  }
+  console.log(
+    `Documents fetching failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response)}`
+  );
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
+};
+
+export const downloadFile = async (docId: number) => {
+  const request: IRequest = {
+    method: RequestMethod.GET,
+    url: `${ApiRoutes.DOCUMENT_BASE_ROUTE}/${docId}`,
+    isAuthRequired: true,
+    queryParams: {},
+    responseType: "blob",
+  };
+
+  const response = await sendRequest(request);
+  if (response.status == 200) {
+    const contentDisposition = response.headers?.["content-disposition"];
+    const fileName = contentDisposition
+      ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
+      : "downloaded-file";
+
+    return { success: true, data: { filename: fileName, file: response.data } };
+  }
+  console.log(
+    `Documents fetching failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response)}`
+  );
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
