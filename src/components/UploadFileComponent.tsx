@@ -6,7 +6,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import React, { useState } from "react";
 import { styled } from "@mui/material";
 import Button from "@mui/material/Button";
-import { SUPPORTED_FILE_TYPES_FOR_UPLOAD } from "../Constants";
+import {
+    MAX_PERMISSIBLE_UPLOAD_FILE_SIZE_MB,
+    SUPPORTED_FILE_TYPES_FOR_UPLOAD,
+} from "../Constants";
 interface UploadFileComponentProps {
     file: any;
     onFileDelete: any;
@@ -48,6 +51,14 @@ const UploadFileComponent: React.FC<UploadFileComponentProps> = ({
                 setErrorMessage("Invalid file type. Please upload a PDF or JPG.");
                 return;
             }
+            const selectedFile = event.target.files[0];
+            const fileSizeMB = selectedFile.size / (1024 * 1024); // Convert size to MB
+            if (fileSizeMB > MAX_PERMISSIBLE_UPLOAD_FILE_SIZE_MB) {
+                setErrorMessage(
+                    `File size must be less than ${MAX_PERMISSIBLE_UPLOAD_FILE_SIZE_MB}MB.`
+                );
+                return;
+            }
             setErrorMessage(null);
             onFileUpload(event.target.files[0]);
         }
@@ -80,7 +91,7 @@ const UploadFileComponent: React.FC<UploadFileComponentProps> = ({
                 tabIndex={-1}
                 startIcon={<CloudUploadIcon />}
             >
-                {`Upload file (Only PDF, JPG)`}
+                {`Upload file (Only PDF, JPG Max ${MAX_PERMISSIBLE_UPLOAD_FILE_SIZE_MB} MB)`}
                 <VisuallyHiddenInput
                     accept=".pdf, .jpg, .jpeg"
                     type="file"
