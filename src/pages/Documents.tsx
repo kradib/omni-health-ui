@@ -15,6 +15,7 @@ import Toast from "../components/Toast";
 import { downloadFile, getDocuments } from "../api/document";
 import LoadingComponent from "../components/LoadingComponent";
 import DownloadIcon from "@mui/icons-material/Download";
+import dayjs from "dayjs";
 
 const Documents = () => {
     const theme = useTheme();
@@ -114,7 +115,9 @@ const Documents = () => {
                             {documents.map((doc: any, index: number) => (
                                 <TableRow key={index}>
                                     <TableCell>{doc.documentName}</TableCell>
-                                    <TableCell>{doc.dateUploaded}</TableCell>
+                                    <TableCell>
+                                        {dayjs(doc.dateUploaded).format("dddd, D MMMM, YYYY")}
+                                    </TableCell>
                                     <TableCell>
                                         <IconButton
                                             sx={{ color: theme.palette.primary.main }}
