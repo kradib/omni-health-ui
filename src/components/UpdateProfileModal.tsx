@@ -1,23 +1,14 @@
 import React, { useState } from "react";
 import ModalComponent from "./ModalComponent";
-import { getUserDetailFromLocalStorage, validateEmail } from "../utils/Utils";
-import TextField from "@mui/material/TextField";
+import { getUserDetailFromLocalStorage } from "../utils/Utils";
 import Button from "@mui/material/Button";
 import { updateUser } from "../api/user";
+import { useForm } from "react-hook-form";
+import FormInput from "./FormInput";
 interface UpdateProfileModalProps {
     show: boolean;
     onUpdated: any;
     onClose: any;
-}
-
-function isValidInput(userDetails: any) {
-    return (
-        userDetails.firstName.length > 0 &&
-        userDetails.lastName.length > 0 &&
-        userDetails.email.length > 0 &&
-        validateEmail(userDetails.email) &&
-        userDetails.phoneNumber.length > 0
-    );
 }
 
 const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
@@ -26,12 +17,17 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
     onClose,
 }) => {
     const defaultUserDetails = getUserDetailFromLocalStorage();
-    const [userDetails, setUserDetails] = useState<any>(defaultUserDetails);
+    const {
+        control,
+        handleSubmit,
+        formState: { isValid },
+    } = useForm({ mode: "onChange", defaultValues: defaultUserDetails });
+
     const [loading, setLoading] = useState(false);
 
-    const handleUpdate = async () => {
+    const handleUpdate = async (data: any) => {
         setLoading(true);
-        const response = await updateUser(userDetails);
+        const response = await updateUser(data);
         setLoading(false);
         onUpdated(response.data, response.success ? "success" : "error");
     };
@@ -45,77 +41,76 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <TextField
-                    id="firstName"
+                <FormInput
+                    control={control}
+                    rules={{ required: "First name is required" }}
+                    name="firstName"
                     label="First Name"
                     disabled
-                    variant="outlined"
-                    value={userDetails.firstName}
                 />
 
-                <TextField
-                    id="lastName"
+                <FormInput
+                    control={control}
+                    rules={{ required: "Last name is required" }}
+                    name="lastName"
                     label="Last Name"
                     disabled
-                    variant="outlined"
-                    value={userDetails.lastName}
                 />
 
-                <TextField
-                    id="emailId"
+                <FormInput
+                    control={control}
+                    rules={{
+                        required: "Email id is required",
+                        pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: "Invalid email address",
+                        },
+                    }}
+                    name="email"
                     label="Email ID"
-                    type="email"
-                    required
-                    onChange={(e) =>
-                        setUserDetails({ ...userDetails, email: e.target.value })
-                    }
-                    variant="outlined"
-                    value={userDetails.email}
                 />
 
-                <TextField
-                    id="phoneNumber"
+                <FormInput
+                    control={control}
+                    rules={{
+                        required: "Phone number is required",
+                        pattern: {
+                            value: /^[0-9]+$/,
+                            message: "Phone number must contain only digits",
+                        },
+                        minLength: {
+                            value: 10,
+                            message: "Phone number must be at least 10 digits",
+                        },
+                        maxLength: {
+                            value: 10,
+                            message: "Phone number must be at most 10 digits",
+                        },
+                    }}
+                    name="phoneNumber"
                     label="Phone Number"
-                    required
-                    onChange={(e) =>
-                        setUserDetails({ ...userDetails, phoneNumber: e.target.value })
-                    }
-                    variant="outlined"
-                    value={userDetails.phoneNumber}
                 />
 
-                <TextField
-                    id="firstGuardianUserId"
-                    label="First Guardian User ID"
+                <FormInput
+                    control={control}
                     disabled={!!defaultUserDetails.firstGuardianUserId?.length}
-                    onChange={(e) =>
-                        setUserDetails({
-                            ...userDetails,
-                            firstGuardianUserId: e.target.value,
-                        })
-                    }
-                    variant="outlined"
-                    value={userDetails.firstGuardianUserId}
+                    rules={{}}
+                    name="firstGuardianUserId"
+                    label="First Guardian User ID"
                 />
 
-                <TextField
-                    id="secondGuardianUserId"
-                    label="Second Guardian User ID"
+                <FormInput
+                    control={control}
                     disabled={!!defaultUserDetails.secondGuardianUserId?.length}
-                    onChange={(e) =>
-                        setUserDetails({
-                            ...userDetails,
-                            secondGuardianUserId: e.target.value,
-                        })
-                    }
-                    variant="outlined"
-                    value={userDetails.secondGuardianUserId}
+                    rules={{}}
+                    name="secondGuardianUserId"
+                    label="Second Guardian User ID"
                 />
 
                 <Button
                     variant="contained"
-                    disabled={!isValidInput(userDetails)}
-                    onClick={handleUpdate}
+                    disabled={!isValid}
+                    onClick={handleSubmit(handleUpdate)}
                     size="large"
                     loading={loading}
                 >

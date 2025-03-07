@@ -9,6 +9,7 @@ interface FormInputProps {
     name: string;
     label: string;
     type?: string;
+    disabled?: boolean;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -17,6 +18,7 @@ const FormInput: React.FC<FormInputProps> = ({
     name,
     label,
     type,
+    disabled,
 }) => {
     const isPasswordField = type == "password";
 
@@ -44,6 +46,7 @@ const FormInput: React.FC<FormInputProps> = ({
                         helperText={fieldState.error?.message || ""}
                         value={field.value ?? ""}
                         required={rules.required}
+                        disabled={disabled}
                     />
                 )
             }
