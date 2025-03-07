@@ -11,7 +11,6 @@ import { RouteConstants } from "../Constants";
 import { signupUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
-import LoadingComponent from "../components/LoadingComponent";
 import PasswordField from "../components/PasswordField";
 
 export const REDIRECT_TIMEOUT = 2000;
@@ -32,7 +31,7 @@ const Register = () => {
     const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
         "success"
     );
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     function isValidInput(userDetails: IUserDetails) {
@@ -185,16 +184,16 @@ const Register = () => {
                             variant="outlined"
                             value={userDetails.secondGuardianUserId}
                         />
-                        <LoadingComponent isLoading={isLoading}>
-                            <Button
-                                variant="contained"
-                                disabled={!isValidInput(userDetails)}
-                                onClick={() => handleRegisterUser(userDetails)}
-                                size="large"
-                            >
-                                Register
-                            </Button>
-                        </LoadingComponent>
+
+                        <Button
+                            variant="contained"
+                            disabled={!isValidInput(userDetails)}
+                            onClick={() => handleRegisterUser(userDetails)}
+                            size="large"
+                            loading={loading}
+                        >
+                            Register
+                        </Button>
                     </Stack>
 
                     <Toast

@@ -34,7 +34,7 @@ const Documents = () => {
         "success"
     );
 
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [documents, setDocuments] = useState([]);
 
@@ -100,7 +100,7 @@ const Documents = () => {
     const documentListComponent = () => {
         return (
             <>
-                <LoadingComponent isLoading={isLoading} />
+                <LoadingComponent isLoading={loading} />
 
                 <TableContainer component={Paper}>
                     <Table sx={{ xs: 300, md: 600 }} aria-label="customized table">

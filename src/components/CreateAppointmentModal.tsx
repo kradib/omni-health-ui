@@ -55,7 +55,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
         isRescheduling ? rescheduleAppointmentDetails : initialAppointmentState
     );
 
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
     const [doctors, setDoctors] = useState([]);
 
@@ -195,7 +195,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                                 disabled={!isValidInput(appointment)}
                                 onClick={handleCreateOrUpdateAppointment}
                                 size="large"
-                                loading={isLoading}
+                                loading={loading}
                                 sx={{ flex: 1 }}
                             >
                                 Create Appointment
@@ -210,7 +210,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                         disabled={!isValidInput(appointment)}
                         onClick={handleCreateOrUpdateAppointment}
                         size="large"
-                        loading={isLoading}
+                        loading={loading}
                         sx={{ flex: 1 }}
                     >
                         Reschedule Appointment

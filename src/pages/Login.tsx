@@ -9,7 +9,6 @@ import { AUTH_TOKEN_KEY, RouteConstants, USER_DETAILS_KEY } from "../Constants";
 import { signinUser } from "../api/user";
 import { useNavigate } from "react-router";
 import Toast from "../components/Toast";
-import LoadingComponent from "../components/LoadingComponent";
 import PasswordField from "../components/PasswordField";
 
 const saveTokenAndUserDetailsToLocalStorage = (
@@ -23,7 +22,7 @@ const saveTokenAndUserDetailsToLocalStorage = (
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [openToast, setOpenToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
@@ -107,17 +106,15 @@ const Login = () => {
                                 </Link>
                             </Typography>
                         </Box>
-
-                        <LoadingComponent isLoading={isLoading}>
-                            <Button
-                                variant="contained"
-                                disabled={!(username.length > 0 && password.length > 0)}
-                                onClick={handleLogin}
-                                size="large"
-                            >
-                                Sign In
-                            </Button>
-                        </LoadingComponent>
+                        <Button
+                            variant="contained"
+                            disabled={!(username.length > 0 && password.length > 0)}
+                            onClick={handleLogin}
+                            size="large"
+                            loading={loading}
+                        >
+                            Sign In
+                        </Button>
                     </Stack>
 
                     <Toast

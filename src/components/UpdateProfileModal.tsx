@@ -27,7 +27,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
 }) => {
     const defaultUserDetails = getUserDetailFromLocalStorage();
     const [userDetails, setUserDetails] = useState<any>(defaultUserDetails);
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleUpdate = async () => {
         setLoading(true);
@@ -117,7 +117,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
                     disabled={!isValidInput(userDetails)}
                     onClick={handleUpdate}
                     size="large"
-                    loading={isLoading}
+                    loading={loading}
                 >
                     Update Profile
                 </Button>

@@ -45,7 +45,7 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
 
     const [appointment, setAppointment] = useState<any>({});
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const getAppointmentDetails = async () => {
         setLoading(true);
@@ -101,7 +101,7 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
     return (
         <>
             <ModalComponent open={show} onClose={handleClose} title={title}>
-                {isLoading && <LoadingComponent isLoading={isLoading} />}
+                {loading && <LoadingComponent isLoading={loading} />}
                 {errorMessage && (
                     <Typography variant="h4" sx={{ color: "red" }}>
                         {errorMessage}

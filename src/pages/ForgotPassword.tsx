@@ -11,7 +11,6 @@ import {
 } from "../Constants";
 import { resetPassword, sendCode } from "../api/user";
 import Toast from "../components/Toast";
-import LoadingComponent from "../components/LoadingComponent";
 import { useNavigate } from "react-router";
 import { REDIRECT_TIMEOUT } from "./Register";
 import PasswordField from "../components/PasswordField";
@@ -24,7 +23,7 @@ const ForgotPassword = () => {
     const [resendAttempts, setResendAttempts] = useState(0);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [openToast, setOpenToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -112,16 +111,15 @@ const ForgotPassword = () => {
                         value={username}
                     />
 
-                    <LoadingComponent isLoading={isLoading}>
-                        <Button
-                            variant="contained"
-                            disabled={!(username.length > 0)}
-                            onClick={handleSendVerificationCode}
-                            size="large"
-                        >
-                            Send Verification Code
-                        </Button>
-                    </LoadingComponent>
+                    <Button
+                        variant="contained"
+                        disabled={!(username.length > 0)}
+                        onClick={handleSendVerificationCode}
+                        size="large"
+                        loading={loading}
+                    >
+                        Send Verification Code
+                    </Button>
                 </Stack>
             </>
         );
@@ -159,22 +157,21 @@ const ForgotPassword = () => {
                         value={confirmPassword}
                     />
 
-                    <LoadingComponent isLoading={isLoading}>
-                        <Button
-                            variant="contained"
-                            disabled={
-                                !(
-                                    !!verificationCode?.length &&
-                                    !!password?.length &&
-                                    password == confirmPassword
-                                )
-                            }
-                            onClick={handleChangePassword}
-                            size="large"
-                        >
-                            Submit
-                        </Button>
-                    </LoadingComponent>
+                    <Button
+                        variant="contained"
+                        disabled={
+                            !(
+                                !!verificationCode?.length &&
+                                !!password?.length &&
+                                password == confirmPassword
+                            )
+                        }
+                        onClick={handleChangePassword}
+                        size="large"
+                        loading={loading}
+                    >
+                        Submit
+                    </Button>
 
                     {resendAttempts < RESEND_ATTEMPTS ? (
                         <>

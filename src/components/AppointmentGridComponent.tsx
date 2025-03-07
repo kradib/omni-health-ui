@@ -32,7 +32,7 @@ const AppointmentsGridComponent = ({
         "success"
     );
     const [isAppointmentListEmpty, setIsAppointmentListEmpty] = useState(false);
-    const [isLoading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [pageLimit, setPageLimit] = useState(0);
     const [appointmentParams, setAppointmentParams] =
         useState<IGetAppointmentsParams>({
@@ -202,7 +202,7 @@ const AppointmentsGridComponent = ({
             <Typography variant="h5" sx={{ mb: 2 }}>
                 {title}
             </Typography>
-            <LoadingComponent isLoading={isLoading} />
+            <LoadingComponent isLoading={loading} />
             {appointmentsGridComponent()}
             <Toast
                 open={openToast}
