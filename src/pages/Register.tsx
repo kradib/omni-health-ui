@@ -1,31 +1,25 @@
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useState } from "react";
-import { IUserDetails } from "../interface/IUserDetails";
-import { validateEmail } from "../utils/Utils";
 import { RouteConstants } from "../Constants";
 import { signupUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
-import PasswordField from "../components/PasswordField";
+import { useForm } from "react-hook-form";
+import FormInput from "../components/FormInput";
 
 export const REDIRECT_TIMEOUT = 2000;
 
 const Register = () => {
-    const [userDetails, setUserDetails] = useState<IUserDetails>({
-        username: "",
-        password: "",
-        firstName: "",
-        lastName: "",
-        emailId: "",
-        phoneNumber: "",
-        firstGuardianUserId: "",
-        secondGuardianUserId: "",
-    });
+    const {
+        control,
+        handleSubmit,
+        formState: { isValid },
+    } = useForm({ mode: "onChange" });
+
     const [openToast, setOpenToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
@@ -34,19 +28,7 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    function isValidInput(userDetails: IUserDetails) {
-        return (
-            userDetails.username.length > 0 &&
-            userDetails.password.length > 0 &&
-            userDetails.firstName.length > 0 &&
-            userDetails.lastName.length > 0 &&
-            userDetails.emailId.length > 0 &&
-            validateEmail(userDetails.emailId) &&
-            userDetails.phoneNumber.length > 0
-        );
-    }
-
-    const handleRegisterUser = async (userDetails: IUserDetails) => {
+    const handleRegisterUser = async (userDetails: any) => {
         setLoading(true);
         const response = await signupUser(userDetails);
         setLoading(false);
@@ -94,101 +76,87 @@ const Register = () => {
                             details
                         </Typography>
 
-                        <TextField
-                            id="username"
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Username is required" }}
+                            name="username"
                             label="Username"
-                            required
-                            onChange={(e) =>
-                                setUserDetails({ ...userDetails, username: e.target.value })
-                            }
-                            variant="outlined"
-                            value={userDetails.username}
                         />
 
-                        <PasswordField
-                            id="password"
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Password is required" }}
+                            name="password"
                             label="Password"
-                            onChange={(e: any) =>
-                                setUserDetails({ ...userDetails, password: e.target.value })
-                            }
-                            value={userDetails.password}
+                            type="password"
                         />
 
-                        <TextField
-                            id="firstName"
+                        <FormInput
+                            control={control}
+                            rules={{ required: "First name is required" }}
+                            name="firstName"
                             label="First Name"
-                            required
-                            onChange={(e) =>
-                                setUserDetails({ ...userDetails, firstName: e.target.value })
-                            }
-                            variant="outlined"
-                            value={userDetails.firstName}
                         />
 
-                        <TextField
-                            id="lastName"
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Last name is required" }}
+                            name="lastName"
                             label="Last Name"
-                            required
-                            onChange={(e) =>
-                                setUserDetails({ ...userDetails, lastName: e.target.value })
-                            }
-                            variant="outlined"
-                            value={userDetails.lastName}
                         />
 
-                        <TextField
-                            id="emailId"
+                        <FormInput
+                            control={control}
+                            rules={{
+                                required: "Email id is required",
+                                pattern: {
+                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                    message: "Invalid email address",
+                                },
+                            }}
+                            name="emailId"
                             label="Email ID"
-                            type="email"
-                            required
-                            onChange={(e) =>
-                                setUserDetails({ ...userDetails, emailId: e.target.value })
-                            }
-                            variant="outlined"
-                            value={userDetails.emailId}
                         />
 
-                        <TextField
-                            id="phoneNumber"
+                        <FormInput
+                            control={control}
+                            rules={{
+                                required: "Phone number is required",
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: "Phone number must contain only digits",
+                                },
+                                minLength: {
+                                    value: 10,
+                                    message: "Phone number must be at least 10 digits",
+                                },
+                                maxLength: {
+                                    value: 10,
+                                    message: "Phone number must be at most 10 digits",
+                                },
+                            }}
+                            name="phoneNumber"
                             label="Phone Number"
-                            required
-                            onChange={(e) =>
-                                setUserDetails({ ...userDetails, phoneNumber: e.target.value })
-                            }
-                            variant="outlined"
-                            value={userDetails.phoneNumber}
                         />
 
-                        <TextField
-                            id="firstGuardianUserId"
+                        <FormInput
+                            control={control}
+                            rules={{}}
+                            name="firstGuardianUserId"
                             label="First Guardian User ID"
-                            onChange={(e) =>
-                                setUserDetails({
-                                    ...userDetails,
-                                    firstGuardianUserId: e.target.value,
-                                })
-                            }
-                            variant="outlined"
-                            value={userDetails.firstGuardianUserId}
                         />
 
-                        <TextField
-                            id="secondGuardianUserId"
+                        <FormInput
+                            control={control}
+                            rules={{}}
+                            name="secondGuardianUserId"
                             label="Second Guardian User ID"
-                            onChange={(e) =>
-                                setUserDetails({
-                                    ...userDetails,
-                                    secondGuardianUserId: e.target.value,
-                                })
-                            }
-                            variant="outlined"
-                            value={userDetails.secondGuardianUserId}
                         />
 
                         <Button
                             variant="contained"
-                            disabled={!isValidInput(userDetails)}
-                            onClick={() => handleRegisterUser(userDetails)}
+                            disabled={!isValid}
+                            onClick={handleSubmit(handleRegisterUser)}
                             size="large"
                             loading={loading}
                         >
