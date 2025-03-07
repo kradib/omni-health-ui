@@ -1,4 +1,3 @@
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -9,7 +8,8 @@ import { AUTH_TOKEN_KEY, RouteConstants, USER_DETAILS_KEY } from "../Constants";
 import { signinUser } from "../api/user";
 import { useNavigate } from "react-router";
 import Toast from "../components/Toast";
-import PasswordField from "../components/PasswordField";
+import { useForm } from "react-hook-form";
+import FormInput from "../components/FormInput";
 
 const saveTokenAndUserDetailsToLocalStorage = (
     token: string,
@@ -20,8 +20,12 @@ const saveTokenAndUserDetailsToLocalStorage = (
 };
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const {
+        control,
+        handleSubmit,
+        formState: { isValid },
+    } = useForm({ mode: "onChange" });
+
     const [loading, setLoading] = useState(false);
     const [openToast, setOpenToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -30,9 +34,9 @@ const Login = () => {
     );
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
+    const handleLogin = async (data: any) => {
         setLoading(true);
-        const response = await signinUser(username, password);
+        const response = await signinUser(data.username, data.password);
         setLoading(false);
 
         if (response.success) {
@@ -76,19 +80,19 @@ const Login = () => {
                             We're excited to have you here again
                         </Typography>
 
-                        <TextField
-                            id="username"
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Username is required" }}
+                            name="username"
                             label="Username"
-                            onChange={(e) => setUsername(e.target.value)}
-                            variant="outlined"
-                            value={username}
                         />
 
-                        <PasswordField
-                            id="password"
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Password is required" }}
+                            name="password"
                             label="Password"
-                            onChange={(e: any) => setPassword(e.target.value)}
-                            value={password}
+                            type="password"
                         />
 
                         <Box
@@ -106,10 +110,11 @@ const Login = () => {
                                 </Link>
                             </Typography>
                         </Box>
+
                         <Button
                             variant="contained"
-                            disabled={!(username.length > 0 && password.length > 0)}
-                            onClick={handleLogin}
+                            disabled={!isValid}
+                            onClick={handleSubmit(handleLogin)}
                             size="large"
                             loading={loading}
                         >

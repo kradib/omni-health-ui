@@ -7,9 +7,10 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 interface PasswordFieldProps {
     id: string;
-    value: String;
+    value?: String;
     label?: String;
-    onChange: any;
+    onChange?: any;
+    error?: any;
 }
 
 const PasswordField: React.FC<PasswordFieldProps> = (props) => {
@@ -35,6 +36,9 @@ const PasswordField: React.FC<PasswordFieldProps> = (props) => {
                     ),
                 },
             }}
+            error={!!props.error}
+            helperText={props.error?.message}
+            required
         />
     );
 };
