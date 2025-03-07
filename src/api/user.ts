@@ -84,3 +84,22 @@ export const resetPassword = async (
   );
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
+
+export const updateUser = async (userDetails: IUserDetails) => {
+  const request: IRequest = {
+    method: RequestMethod.PATCH,
+    message: userDetails,
+    url: ApiRoutes.REGISTER_USER_ROUTE,
+  };
+  const response = await sendRequest(request);
+
+  if (response.status == 200) {
+    return { success: true, data: "User registration successful" };
+  }
+  console.log(
+    `User registration failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
+  );
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
+};
