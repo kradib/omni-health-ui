@@ -14,7 +14,7 @@ import Toast from "../components/Toast";
 import { useNavigate } from "react-router";
 import { REDIRECT_TIMEOUT } from "./Register";
 import PasswordField from "../components/PasswordField";
-
+import Link from '@mui/material/Link';
 const ForgotPassword = () => {
     const [isVerificationCodeSent, setIsVerificationCodeSent] = useState(false);
     const [username, setUsername] = useState("");
@@ -206,6 +206,7 @@ const ForgotPassword = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
+                    justifyContent: "space-between",
                     minHeight: "98vh",
                     p: 1,
                 }}
@@ -218,7 +219,14 @@ const ForgotPassword = () => {
                     message={toastMessage}
                     onClose={handleCloseSnackbar}
                 />
+                <Typography align="center" variant="subtitle1">
+                    Want to go back?{" "}
+                    <Link href={RouteConstants.LOGIN_ROUTE} underline="none">
+                        Sign In
+                    </Link>
+                </Typography>
             </Box>
+
         </Box>
     );
 };
