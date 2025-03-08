@@ -74,6 +74,26 @@ export const getAppointment = async (appointmentId: number) => {
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
+export const getAppointmentSlots = async (params: any) => {
+  const request: IRequest = {
+    method: RequestMethod.GET,
+    url: ApiRoutes.APPOINTMENT_SLOT_ROUTE,
+    isAuthRequired: true,
+    queryParams: params,
+  };
+
+  const response = await sendRequest(request);
+  if (response.status == 200) {
+    return { success: true, data: response.data };
+  }
+  console.log(
+    `Appointment slot fetching failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response)}`
+  );
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
+};
+
 export const rescheduleAppointment = async (
   appointmentId: number,
   appointmentDetails: IAppointmentDetails

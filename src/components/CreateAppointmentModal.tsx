@@ -48,7 +48,8 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
     const initialAppointmentState = {
         appointmentDateTime: "",
         appointmentPlace: "",
-        doctorId: ""
+        doctorId: "",
+        slotId: "",
     };
 
     const [appointment, setAppointment] = useState(
@@ -56,7 +57,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
     );
 
     const [loading, setLoading] = useState(false);
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState(isRescheduling ? 2 : 1);
     const [doctors, setDoctors] = useState([]);
 
     const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -85,13 +86,17 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
         }
     };
 
-    const handleTimeChange = (time: string, date: any) => {
+    const handleTimeChange = (time: string, date: any, slot: any) => {
         const finalDate = dayjs(
             `${date.format(DATE_FORMAT)} ${time}`,
             `${DATE_FORMAT} ${TIME_INPUT_FORMAT}`
         ).format(DATE_TIME_FORMAT);
         console.log(finalDate);
-        setAppointment({ ...appointment, appointmentDateTime: finalDate });
+        setAppointment({
+            ...appointment,
+            appointmentDateTime: finalDate,
+            slotId: slot?.slot?.id || "",
+        });
     };
 
     const timeSlot = () => {
@@ -101,6 +106,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                 appointmentDateTime={
                     isRescheduling ? appointment.appointmentDateTime : undefined
                 }
+                doctorId={appointment.doctorId}
             />
         );
     };
@@ -118,23 +124,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                {pageNumber == 1 && (
-                    <>
-                        {timeSlot()}
-                        {!isRescheduling && (
-                            <Button
-                                variant="contained"
-                                disabled={appointment.appointmentDateTime.length == 0}
-                                onClick={() => setPageNumber(2)}
-                                size="large"
-                            >
-                                Next
-                            </Button>
-                        )}
-                    </>
-                )}
-
-                {pageNumber == 2 && !isRescheduling && (
+                {pageNumber == 1 && !isRescheduling && (
                     <>
                         <Autocomplete
                             id="doctorName"
@@ -181,26 +171,42 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                             variant="outlined"
                             value={appointment.appointmentPlace}
                         />
-                        <Stack direction="row" spacing={2}>
-                            <Button
-                                variant="outlined"
-                                onClick={() => setPageNumber(1)}
-                                size="large"
-                                sx={{ flex: 1 }}
-                            >
-                                Go back
-                            </Button>
-                            <Button
-                                variant="contained"
-                                disabled={!isValidInput(appointment)}
-                                onClick={handleCreateOrUpdateAppointment}
-                                size="large"
-                                loading={loading}
-                                sx={{ flex: 1 }}
-                            >
-                                Create Appointment
-                            </Button>
-                        </Stack>
+                        <Button
+                            variant="contained"
+                            disabled={!appointment.doctorId || !appointment.appointmentPlace}
+                            onClick={() => setPageNumber(2)}
+                            size="large"
+                        >
+                            Next
+                        </Button>
+                    </>
+                )}
+
+                {pageNumber == 2 && (
+                    <>
+                        {timeSlot()}
+                        {!isRescheduling && (
+                            <Stack direction="row" spacing={2}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => setPageNumber(1)}
+                                    size="large"
+                                    sx={{ flex: 1 }}
+                                >
+                                    Go back
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    disabled={!isValidInput(appointment)}
+                                    onClick={handleCreateOrUpdateAppointment}
+                                    size="large"
+                                    loading={loading}
+                                    sx={{ flex: 1 }}
+                                >
+                                    Create Appointment
+                                </Button>
+                            </Stack>
+                        )}
                     </>
                 )}
 
