@@ -114,7 +114,7 @@ const Register = () => {
                                     message: "Invalid email address",
                                 },
                             }}
-                            name="emailId"
+                            name="email"
                             label="Email ID"
                         />
 

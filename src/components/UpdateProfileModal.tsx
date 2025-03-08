@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { updateUser } from "../api/user";
 import { useForm } from "react-hook-form";
 import FormInput from "./FormInput";
+import { USER_DETAILS_KEY } from "../Constants";
 interface UpdateProfileModalProps {
     show: boolean;
     onUpdated: any;
@@ -29,7 +30,11 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
         setLoading(true);
         const response = await updateUser(data);
         setLoading(false);
-        onUpdated(response.data, response.success ? "success" : "error");
+        localStorage.setItem(
+            USER_DETAILS_KEY,
+            JSON.stringify(response.data.userDetails)
+        );
+        onUpdated(response.data.message, response.success ? "success" : "error");
     };
 
     return (
@@ -46,7 +51,6 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
                     rules={{ required: "First name is required" }}
                     name="firstName"
                     label="First Name"
-                    disabled
                 />
 
                 <FormInput
@@ -54,7 +58,6 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
                     rules={{ required: "Last name is required" }}
                     name="lastName"
                     label="Last Name"
-                    disabled
                 />
 
                 <FormInput

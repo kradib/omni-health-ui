@@ -68,7 +68,11 @@ export const resetPassword = async (
 ) => {
   const request: IRequest = {
     method: RequestMethod.POST,
-    message: { token: verificationCode, newPassword: password, userName: username },
+    message: {
+      token: verificationCode,
+      newPassword: password,
+      userName: username,
+    },
     url: ApiRoutes.RESET_PASSWORD_ROUTE,
   };
   const response = await sendRequest(request);
@@ -89,12 +93,19 @@ export const updateUser = async (userDetails: IUserDetails) => {
   const request: IRequest = {
     method: RequestMethod.PATCH,
     message: userDetails,
-    url: ApiRoutes.REGISTER_USER_ROUTE,
+    url: ApiRoutes.USER_BASE_ROUTE,
+    isAuthRequired: true,
   };
   const response = await sendRequest(request);
 
   if (response.status == 200) {
-    return { success: true, data: "User registration successful" };
+    return {
+      success: true,
+      data: {
+        message: "User update successful",
+        userDetails: response.data.data.userDetail,
+      },
+    };
   }
   console.log(
     `User registration failed due to status: ${
