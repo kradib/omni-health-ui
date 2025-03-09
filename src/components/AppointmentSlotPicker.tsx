@@ -17,12 +17,14 @@ import { getAppointmentSlots } from "../api/appointment";
 interface IAppointmentSlotPickerProps {
     onChange?: any;
     appointmentDateTime?: string;
+    slotId?: string;
     doctorId: string;
 }
 
 const AppointmentSlotPicker: React.FC<IAppointmentSlotPickerProps> = ({
     onChange,
     appointmentDateTime,
+    slotId,
     doctorId,
 }) => {
     const [allowedSlots, setAllowedSlots] = useState<any>([]);
@@ -107,9 +109,7 @@ const AppointmentSlotPicker: React.FC<IAppointmentSlotPickerProps> = ({
         ) {
             setSelectedTime(inputTime);
             setSelectedSlot(
-                allowedSlots.filter(
-                    (timeSlot: any) => timeSlot.slot.time == inputTime
-                )[0]
+                allowedSlots.filter((timeSlot: any) => timeSlot.slot.id == slotId)[0]
             );
         } else if (
             allowedSlots.length > 0 &&

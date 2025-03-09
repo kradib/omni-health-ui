@@ -152,6 +152,7 @@ const AppointmentCard: React.FC<IAppointmentCardProps> = ({
             appointmentDateTime: appointment.appointmentDateTime,
             appointmentPlace: appointment.doctorDetail.location,
             doctorId: appointment.doctorDetail.id,
+            slotId: appointment.slotId,
         };
 
         return (
