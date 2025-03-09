@@ -91,7 +91,6 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
             `${date.format(DATE_FORMAT)} ${time}`,
             `${DATE_FORMAT} ${TIME_INPUT_FORMAT}`
         ).format(DATE_TIME_FORMAT);
-        console.log(finalDate);
         setAppointment({
             ...appointment,
             appointmentDateTime: finalDate,
@@ -134,7 +133,6 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
                             }
                             autoSelect
                             onChange={(_e, value: any) => {
-                                console.log("Doctor value", value);
                                 if (value) {
                                     setAppointment({
                                         ...appointment,
