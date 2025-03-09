@@ -1,7 +1,9 @@
+import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import React from "react";
 
 interface ModalComponentProps {
@@ -39,10 +41,23 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
+                    <IconButton
+                        onClick={onClose}
+                        sx={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                        }}
+                        size="small"
+                    >
+                        <CloseOutlinedIcon fontSize="small" />
+                    </IconButton>
                     <Stack spacing={2}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            {title}
-                        </Typography>
+                        <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                {title}
+                            </Typography>
+                        </Stack>
                         {children}
                     </Stack>
                 </Box>
