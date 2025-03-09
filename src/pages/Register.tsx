@@ -123,16 +123,16 @@ const Register = () => {
                             rules={{
                                 required: "Phone number is required",
                                 pattern: {
-                                    value: /^[0-9]+$/,
-                                    message: "Phone number must contain only digits",
+                                    value: /^\+?[1-9]\d{1,14}$/,
+                                    message: "Invalid phone number format",
                                 },
                                 minLength: {
                                     value: 10,
                                     message: "Phone number must be at least 10 digits",
                                 },
                                 maxLength: {
-                                    value: 10,
-                                    message: "Phone number must be at most 10 digits",
+                                    value: 15,
+                                    message: "Phone number must be at most 15 digits",
                                 },
                             }}
                             name="phoneNumber"
