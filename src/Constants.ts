@@ -41,7 +41,19 @@ export const SUPPORTED_FILE_TYPES_FOR_UPLOAD = [
   "image/jpeg",
 ];
 
-export const APPOINTMENT_MODE_OWN = 'own';
-export const APPOINTMENT_MODE_DEPENDENT = 'dependent'
+export const APPOINTMENT_MODE_OWN = "own";
+export const APPOINTMENT_MODE_DEPENDENT = "dependent";
 
 export const MAX_PERMISSIBLE_UPLOAD_FILE_SIZE_MB = 5;
+
+export const BLOOD_GROUP_TYPES = [
+  "O+",
+  "O-",
+  "A+",
+  "A-",
+  "B+",
+  "B-",
+  "AB+",
+  "AB-",
+  "Others",
+];

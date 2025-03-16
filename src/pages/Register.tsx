@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useState } from "react";
-import { RouteConstants } from "../Constants";
+import { BLOOD_GROUP_TYPES, RouteConstants } from "../Constants";
 import { signupUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
@@ -138,7 +138,57 @@ const Register = () => {
                             name="phoneNumber"
                             label="Phone Number"
                         />
-
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Date of Birth is required" }}
+                            name="dateOfBirth"
+                            label="Date Of Birth"
+                            type="date"
+                        />
+                        <FormInput
+                            control={control}
+                            rules={{}}
+                            name="bloodGroup"
+                            label="Blood Group"
+                            type="options"
+                            options={BLOOD_GROUP_TYPES}
+                        />
+                        <FormInput
+                            control={control}
+                            rules={{
+                                type: "number",
+                                min: {
+                                    value: 50,
+                                    message: "Height must be at least 50 cm",
+                                },
+                                max: {
+                                    value: 300,
+                                    message: "Height must be at most 300 cm",
+                                },
+                                validate: (value: any) =>
+                                    Number.isInteger(Number(value)) || "Must be a whole number",
+                            }}
+                            type="number"
+                            name="height"
+                            label="Height (in cm)"
+                        />
+                        <FormInput
+                            control={control}
+                            rules={{
+                                type: "number",
+                                min: {
+                                    value: 10,
+                                    message: "Weight must be at least 10 kg",
+                                },
+                                max: {
+                                    value: 500,
+                                    message: "Weight must be at most 500 kg",
+                                },
+                            }}
+                            type="number"
+                            name="weight"
+                            label="Weight (in kg)"
+                        />
                         <FormInput
                             control={control}
                             rules={{}}
