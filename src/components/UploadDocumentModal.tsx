@@ -4,17 +4,20 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import UploadFileComponent from "./UploadFileComponent";
 import { uploadDocument } from "../api/document";
+import { uploadAppointmentDocument } from "../api/appointment";
 
 interface UploadDocumentModalProps {
     show: boolean;
     onClose: any;
     onUploaded: any;
+    appointmentId?: any;
 }
 
 const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
     show,
-    onClose: handleClose,
-    onUploaded: handleUploaded,
+    onClose,
+    onUploaded,
+    appointmentId,
 }) => {
     const [docName, setDocName] = useState("");
     const [file, setFile] = useState<any>(null);
@@ -26,18 +29,23 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
 
     const handleUploadDocument = async () => {
         setLoading(true);
-        const response = await uploadDocument(file, docName);
+        let response;
+        if (appointmentId) {
+            response = await uploadAppointmentDocument(file, docName, appointmentId);
+        } else {
+            response = await uploadDocument(file, docName);
+        }
         setLoading(false);
         setFile(null);
         setDocName("");
-        handleUploaded(response.data, response.success ? "success" : "error");
+        onUploaded(response.data, response.success ? "success" : "error");
     };
 
     return (
         <>
             <ModalComponent
                 open={show}
-                onClose={handleClose}
+                onClose={onClose}
                 title="Upload Document"
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"

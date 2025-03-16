@@ -13,7 +13,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import CreateAppointmentModal from "./CreateAppointmentModal";
 import ViewAppointmentModal from "./ViewAppointmentModal";
-import { APPOINTMENT_MODE_DEPENDENT } from "../Constants";
+import { APPOINTMENT_MODE_DEPENDENT, CANCELLED_APPOINTMENT_STATUS, COMPLETED_APPOINTMENT_STATUS, CONFIRMED_APPOINTMENT_STATUS, EDITABLE_APPOINT_STATUS, PAST_DUE_APPOINTMENT_STATUS, PENDING_APPOINTMENT_STATUS } from "../Constants";
 import Chip from "@mui/material/Chip";
 import { stringToColour } from "../utils/Utils";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -38,17 +38,6 @@ const statusStyle = {
     border: "1px solid",
     p: 0.5,
 };
-
-const PENDING_APPOINTMENT_STATUS = "Pending";
-const PAST_DUE_APPOINTMENT_STATUS = "Past due";
-const COMPLETED_APPOINTMENT_STATUS = "Completed";
-const CONFIRMED_APPOINTMENT_STATUS = "Confirmed";
-const CANCELLED_APPOINTMENT_STATUS = "Cancelled";
-
-const EDITABLE_APPOINT_STATUS = [
-    PENDING_APPOINTMENT_STATUS,
-    CONFIRMED_APPOINTMENT_STATUS,
-];
 
 const getAppointmentStatus: any = (appointment: any) => {
     if (

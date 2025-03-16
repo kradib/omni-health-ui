@@ -16,6 +16,7 @@ import { downloadFile, getDocuments } from "../api/document";
 import LoadingComponent from "../components/LoadingComponent";
 import DownloadIcon from "@mui/icons-material/Download";
 import dayjs from "dayjs";
+import { downloadFileFromResponse } from "../utils/Utils";
 
 const Documents = () => {
     const theme = useTheme();
@@ -70,21 +71,7 @@ const Documents = () => {
 
     const handleDownloadDocument = async (docId: number) => {
         const response = await downloadFile(docId);
-
-        // Create a Blob URL
-        const url = window.URL.createObjectURL(new Blob([response.data.file]));
-
-        // Create an invisible link and trigger the download
-        const link = document.createElement("a");
-        link.href = url;
-
-        // Set the file name (you can get it from headers if needed)
-        link.setAttribute("download", response.data.filename);
-
-        // Add to the DOM, trigger click, and remove the element
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode?.removeChild(link);
+        downloadFileFromResponse(response.data.file, response.data.filename);
     };
 
     const noDocumentsComponent = () => {

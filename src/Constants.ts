@@ -23,6 +23,8 @@ export class ApiRoutes {
 
   public static APPOINTMENT_SLOT_ROUTE = `${this.APPOINTMENT_BASE_ROUTE}/slots`;
   public static DEPENDENT_APPOINTMENT_ROUTE = `${this.APPOINTMENT_BASE_ROUTE}/dependents`;
+  public static APPOINTMENT_NOTES_ROUTE = `note`;
+  public static APPOINTMENT_DOCUMENT_ROUTE = `document`;
 
   public static UPLOAD_FILE_ROUTE = `${this.DOCUMENT_BASE_ROUTE}/upload`;
 }
@@ -56,4 +58,15 @@ export const BLOOD_GROUP_TYPES = [
   "AB+",
   "AB-",
   "Others",
+];
+
+export const PENDING_APPOINTMENT_STATUS = "Pending";
+export const PAST_DUE_APPOINTMENT_STATUS = "Past due";
+export const COMPLETED_APPOINTMENT_STATUS = "Completed";
+export const CONFIRMED_APPOINTMENT_STATUS = "Confirmed";
+export const CANCELLED_APPOINTMENT_STATUS = "Cancelled";
+
+export const EDITABLE_APPOINT_STATUS = [
+    PENDING_APPOINTMENT_STATUS,
+    CONFIRMED_APPOINTMENT_STATUS,
 ];

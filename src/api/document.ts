@@ -46,10 +46,14 @@ export const getDocuments = async () => {
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
-export const downloadFile = async (docId: number) => {
+export const downloadFile = async (docId: number, appointmentId?: number) => {
+  const url = appointmentId
+    ? `${ApiRoutes.APPOINTMENT_BASE_ROUTE}/${appointmentId}/${ApiRoutes.APPOINTMENT_DOCUMENT_ROUTE}/${docId}`
+    : `${ApiRoutes.DOCUMENT_BASE_ROUTE}/${docId}`;
+
   const request: IRequest = {
     method: RequestMethod.GET,
-    url: `${ApiRoutes.DOCUMENT_BASE_ROUTE}/${docId}`,
+    url: url,
     isAuthRequired: true,
     queryParams: {},
     responseType: "blob",

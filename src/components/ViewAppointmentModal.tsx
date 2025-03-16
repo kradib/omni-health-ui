@@ -9,13 +9,18 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { DoctorIcon } from "../icons/DoctorIcon";
 import TextField from "@mui/material/TextField";
-import ContentPasteOutlinedIcon from "@mui/icons-material/ContentPasteOutlined";
-import { useTheme } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import DownloadIcon from "@mui/icons-material/Download";
+import Button from "@mui/material/Button";
 import SpeakerNotesOutlinedIcon from "@mui/icons-material/SpeakerNotesOutlined";
-import { APPOINTMENT_MODE_OWN } from "../Constants";
+import {
+    APPOINTMENT_MODE_OWN,
+    CANCELLED_APPOINTMENT_STATUS,
+} from "../Constants";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import AddAppointmentNotesComponent from "./AddAppointmentNotesComponent";
+import Toast from "./Toast";
+import ViewAppointmentNotesComponent from "./ViewAppointmentNotesComponent";
+import UploadDocumentModal from "./UploadDocumentModal";
+import ViewDocumentsModal from "./ViewDocumentsModal";
 
 interface ViewAppointmentModalProps {
     show: boolean;
@@ -24,7 +29,7 @@ interface ViewAppointmentModalProps {
     handleClose: any;
 }
 
-const appointmentNotesStyle = {
+const prescriptionStyle = {
     color: "black",
     WebkitTextFillColor: "black",
     backgroundColor: "#ebeced",
@@ -41,11 +46,25 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
     appointmentId,
     handleClose,
 }) => {
-    const theme = useTheme();
-
     const [appointment, setAppointment] = useState<any>({});
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+
+    const [showAddNoteModal, setShowAddNoteModal] = useState(false);
+    const [showViewNoteModal, setShowViewNoteModal] = useState(false);
+
+    const [showAddDocumentModal, setShowAddDocumentModal] = useState(false);
+    const [showViewDocumentsModal, setShowViewDocumentsModal] = useState(false);
+
+    const [openToast, setOpenToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
+        "success"
+    );
+
+    const isAppointmentCancelled =
+        appointment?.appointmentStatus?.toLowerCase() ===
+        CANCELLED_APPOINTMENT_STATUS.toLowerCase();
 
     const getAppointmentDetails = async () => {
         setLoading(true);
@@ -60,34 +79,146 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
         }
     };
 
-    const getPrescription = () => {
+    const handleCloseSnackbar = () => {
+        setOpenToast(false);
+    };
+
+    const handleEntityAdded = (
+        message: string,
+        severity: "success" | "error"
+    ) => {
+        setToastMessage(message);
+        setToastSeverity(severity);
+        setOpenToast(true);
+        setShowAddNoteModal(false);
+        setShowAddDocumentModal(false);
+        getAppointmentDetails();
+    };
+
+    const addNotes = () => {
         return (
             <>
-                <Stack
-                    sx={{ justifyContent: "space-between", alignItems: "center" }}
-                    direction="row"
-                    spacing={2}
+                <Button
+                    variant="outlined"
+                    onClick={() => setShowAddNoteModal(true)}
+                    size="large"
+                    fullWidth
                 >
-                    <Stack
-                        sx={{ justifyContent: "left", alignItems: "center" }}
-                        direction="row"
-                        spacing={2}
-                    >
-                        <ContentPasteOutlinedIcon />
-                        <Typography variant="body1">Prescription</Typography>
-                    </Stack>
-                    <IconButton
-                        sx={{ color: theme.palette.primary.main }}
-                        onClick={() => {
-                            console.log(appointment.id);
-                        }}
-                    >
-                        <DownloadIcon />
-                    </IconButton>
-                </Stack>
+                    Add Notes
+                </Button>
+                {showAddNoteModal && (
+                    <AddAppointmentNotesComponent
+                        show={showAddNoteModal}
+                        appointmentId={appointmentId}
+                        onNoteAdded={handleEntityAdded}
+                        onClose={() => setShowAddNoteModal(false)}
+                    />
+                )}
             </>
         );
     };
+
+    const viewNotes = () => {
+        return (
+            !!appointment.notes?.length && (
+                <>
+                    <Button
+                        variant="contained"
+                        onClick={() => setShowViewNoteModal(true)}
+                        size="large"
+                        fullWidth
+                    >
+                        View Notes
+                    </Button>
+                    {showViewNoteModal && (
+                        <ViewAppointmentNotesComponent
+                            show={showViewNoteModal}
+                            appointmentNotes={appointment.notes}
+                            doctorName={`${appointment.doctorDetail.firstName} ${appointment.doctorDetail.lastName}`}
+                            onClose={() => setShowViewNoteModal(false)}
+                        />
+                    )}
+                </>
+            )
+        );
+    };
+
+    const addDocuments = () => {
+        return (
+            <>
+                <Button
+                    variant="outlined"
+                    onClick={() => setShowAddDocumentModal(true)}
+                    size="large"
+                    fullWidth
+                >
+                    Add Report
+                </Button>{" "}
+                {showAddDocumentModal && (
+                    <UploadDocumentModal
+                        show={showAddDocumentModal}
+                        onClose={() => setShowAddDocumentModal(false)}
+                        onUploaded={handleEntityAdded}
+                        appointmentId={appointmentId}
+                    />
+                )}
+            </>
+        );
+    };
+
+    const viewDocuments = () => {
+        return (
+            <>
+                {!!appointment.documents?.length && (
+                    <Button
+                        variant="contained"
+                        onClick={() => setShowViewDocumentsModal(true)}
+                        size="large"
+                        fullWidth
+                    >
+                        View Reports
+                    </Button>
+                )}
+                {showViewDocumentsModal && (
+                    <ViewDocumentsModal
+                        show={showViewDocumentsModal}
+                        appointmentId={appointmentId}
+                        appointmentDocuments={appointment.documents}
+                        onClose={() => setShowViewDocumentsModal(false)}
+                    />
+                )}
+            </>
+        );
+    };
+
+    const viewPrescription = () => (
+        <Stack spacing={1}>
+            <Stack
+                sx={{ justifyContent: "left", alignItems: "center" }}
+                direction="row"
+                spacing={2}
+            >
+                <SpeakerNotesOutlinedIcon />
+                <Typography variant="body1">Prescription</Typography>
+            </Stack>
+
+            <TextField
+                // disabled
+                multiline
+                maxRows={10}
+                slotProps={{
+                    input: {
+                        readOnly: true,
+                    },
+                }}
+                value={
+                    !!appointment.prescription?.length ||
+                    "There is no prescription added by the doctor"
+                }
+                sx={prescriptionStyle}
+            />
+        </Stack>
+    );
 
     useEffect(() => {
         getAppointmentDetails();
@@ -152,33 +283,24 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
                     </Typography>
                 </Stack>
 
-                <Stack spacing={1}>
-                    <Stack
-                        sx={{ justifyContent: "left", alignItems: "center" }}
-                        direction="row"
-                        spacing={2}
-                    >
-                        <SpeakerNotesOutlinedIcon />
-                        <Typography variant="body1">Appointment Notes</Typography>
-                    </Stack>
+                {!isAppointmentCancelled && viewPrescription()}
 
-                    <TextField
-                        // disabled
-                        multiline
-                        maxRows={10}
-                        slotProps={{
-                            input: {
-                                readOnly: true,
-                            },
-                        }}
-                        value={
-                            !!appointment.prescription?.length ||
-                            "There is no prescription added by the doctor"
-                        }
-                        sx={appointmentNotesStyle}
-                    />
+                <Stack direction="row" spacing={2}>
+                    {!isAppointmentCancelled && viewNotes()}
+                    {!isAppointmentCancelled && addNotes()}
                 </Stack>
-                {!!appointment.prescription?.length && getPrescription()}
+
+                <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
+                    {!isAppointmentCancelled && viewDocuments()}
+                    {!isAppointmentCancelled && addDocuments()}
+                </Stack>
+
+                <Toast
+                    open={openToast}
+                    severity={toastSeverity}
+                    message={toastMessage}
+                    onClose={handleCloseSnackbar}
+                />
             </ModalComponent>
         </>
     );
