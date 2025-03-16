@@ -30,10 +30,12 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
         setLoading(true);
         const response = await updateUser(data);
         setLoading(false);
-        localStorage.setItem(
-            USER_DETAILS_KEY,
-            JSON.stringify(response.data.userDetails)
-        );
+        if (response.success) {
+            localStorage.setItem(
+                USER_DETAILS_KEY,
+                JSON.stringify(response.data.userDetails)
+            );
+        }
         onUpdated(response.data.message, response.success ? "success" : "error");
     };
 
