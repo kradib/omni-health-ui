@@ -166,7 +166,7 @@ const Register = () => {
                                     message: "Height must be at most 300 cm",
                                 },
                                 validate: (value: any) =>
-                                    Number.isInteger(Number(value)) || "Must be a whole number",
+                                    !value || (Number.isInteger(Number(value)) || "Must be a whole number"),
                             }}
                             type="number"
                             name="height"
