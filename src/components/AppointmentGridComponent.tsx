@@ -96,11 +96,10 @@ const AppointmentsGridComponent = ({
                         }}
                         sx={{
                             width: "100%", // Set the desired width
-                            maxWidth: { xs: "100vw", md: "400px" }, // Optional: Limit max width
+                            maxWidth: { xs: "100vw", md: "300px" }, // Optional: Limit max width
                         }}
                     >
                         <Tab label="All" value="all" />
-                        <Tab label="Confirmed" value="confirmed" />
                         <Tab label="Completed" value="completed" />
                         <Tab label="Cancelled" value="cancelled" />
                     </Tabs>
