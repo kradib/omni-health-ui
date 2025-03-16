@@ -14,6 +14,7 @@ import SpeakerNotesOutlinedIcon from "@mui/icons-material/SpeakerNotesOutlined";
 import {
     APPOINTMENT_MODE_OWN,
     CANCELLED_APPOINTMENT_STATUS,
+    COMPLETED_APPOINTMENT_STATUS
 } from "../Constants";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import AddAppointmentNotesComponent from "./AddAppointmentNotesComponent";
@@ -21,6 +22,7 @@ import Toast from "./Toast";
 import ViewAppointmentNotesComponent from "./ViewAppointmentNotesComponent";
 import UploadDocumentModal from "./UploadDocumentModal";
 import ViewDocumentsModal from "./ViewDocumentsModal";
+import { getAppointmentStatus } from "../utils/Utils";
 
 interface ViewAppointmentModalProps {
     show: boolean;
@@ -62,9 +64,11 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
         "success"
     );
 
+    const appointmentStatus = getAppointmentStatus(appointment);
     const isAppointmentCancelled =
-        appointment?.appointmentStatus?.toLowerCase() ===
-        CANCELLED_APPOINTMENT_STATUS.toLowerCase();
+        appointmentStatus == CANCELLED_APPOINTMENT_STATUS;
+    const isAppointmentCompleted =
+        appointmentStatus == COMPLETED_APPOINTMENT_STATUS;
 
     const getAppointmentDetails = async () => {
         setLoading(true);
@@ -212,7 +216,7 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
                     },
                 }}
                 value={
-                    !!appointment.prescription?.length ||
+                    appointment.prescription ||
                     "There is no prescription added by the doctor"
                 }
                 sx={prescriptionStyle}
@@ -283,7 +287,7 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
                     </Typography>
                 </Stack>
 
-                {!isAppointmentCancelled && viewPrescription()}
+                {isAppointmentCompleted && viewPrescription()}
 
                 <Stack direction="row" spacing={2}>
                     {!isAppointmentCancelled && viewNotes()}

@@ -1,4 +1,5 @@
-import { USER_DETAILS_KEY } from "../Constants";
+import dayjs from "dayjs";
+import { CANCELLED_APPOINTMENT_STATUS, COMPLETED_APPOINTMENT_STATUS, PAST_DUE_APPOINTMENT_STATUS, PENDING_APPOINTMENT_STATUS, USER_DETAILS_KEY } from "../Constants";
 
 export const validateEmail = (email: String) => {
   return String(email)
@@ -48,4 +49,23 @@ export const downloadFileFromResponse = (file: any, filename: string) => {
   document.body.appendChild(link);
   link.click();
   link.parentNode?.removeChild(link);
+};
+
+export const getAppointmentStatus: any = (appointment: any) => {
+  if (
+    appointment.appointmentStatus?.toLocaleLowerCase() ==
+    CANCELLED_APPOINTMENT_STATUS.toLocaleLowerCase()
+  ) {
+    return CANCELLED_APPOINTMENT_STATUS;
+  }
+  if (
+    appointment.appointmentStatus?.toLocaleLowerCase() ==
+    COMPLETED_APPOINTMENT_STATUS.toLocaleLowerCase()
+  ) {
+    return COMPLETED_APPOINTMENT_STATUS;
+  }
+  if (dayjs(appointment.appointmentDateTime).isBefore(dayjs())) {
+    return PAST_DUE_APPOINTMENT_STATUS;
+  }
+  return PENDING_APPOINTMENT_STATUS;
 };
