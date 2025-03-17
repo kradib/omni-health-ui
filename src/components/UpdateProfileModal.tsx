@@ -6,6 +6,7 @@ import { updateUser } from "../api/user";
 import { useForm } from "react-hook-form";
 import FormInput from "./FormInput";
 import { USER_DETAILS_KEY } from "../Constants";
+import dayjs from "dayjs";
 interface UpdateProfileModalProps {
     show: boolean;
     onUpdated: any;
@@ -17,7 +18,11 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
     onUpdated,
     onClose,
 }) => {
-    const defaultUserDetails = getUserDetailFromLocalStorage();
+    const userDetails = getUserDetailFromLocalStorage();
+    const defaultUserDetails = {
+        ...userDetails,
+        dateOfBirth: dayjs(userDetails.dateOfBirth),
+    };
     const {
         control,
         handleSubmit,
@@ -94,6 +99,62 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
                     }}
                     name="phoneNumber"
                     label="Phone Number"
+                />
+
+                <FormInput
+                    control={control}
+                    rules={{ required: "Date of Birth is required" }}
+                    name="dateOfBirth"
+                    label="Date Of Birth"
+                    type="date"
+                    disabled
+                />
+
+                <FormInput
+                    control={control}
+                    rules={{
+                        type: "number",
+                        min: {
+                            value: 50,
+                            message: "Height must be at least 50 cm",
+                        },
+                        max: {
+                            value: 300,
+                            message: "Height must be at most 300 cm",
+                        },
+                        validate: (value: any) =>
+                            !value ||
+                            Number.isInteger(Number(value)) ||
+                            "Must be a whole number",
+                    }}
+                    type="number"
+                    name="height"
+                    label="Height (in cm)"
+                />
+                <FormInput
+                    control={control}
+                    rules={{
+                        type: "number",
+                        min: {
+                            value: 10,
+                            message: "Weight must be at least 10 kg",
+                        },
+                        max: {
+                            value: 500,
+                            message: "Weight must be at most 500 kg",
+                        },
+                    }}
+                    type="number"
+                    name="weight"
+                    label="Weight (in kg)"
+                />
+
+                <FormInput
+                    control={control}
+                    rules={{ required: "First name is required" }}
+                    name="bloodGroup"
+                    label="Blood Group"
+                    disabled
                 />
 
                 <FormInput

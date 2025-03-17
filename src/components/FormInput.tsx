@@ -75,6 +75,7 @@ const FormInput: React.FC<FormInputProps> = ({
                                             required: rules.required,
                                             error: !!fieldState.error,
                                             helperText: fieldState.error?.message || "",
+                                            disabled: disabled
                                         },
                                     }}
                                 />
