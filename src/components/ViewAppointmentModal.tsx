@@ -138,7 +138,6 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
                         <ViewAppointmentNotesComponent
                             show={showViewNoteModal}
                             appointmentNotes={appointment.notes}
-                            doctorName={`${appointment.doctorDetail.firstName} ${appointment.doctorDetail.lastName}`}
                             onClose={() => setShowViewNoteModal(false)}
                         />
                     )}

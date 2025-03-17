@@ -7,14 +7,13 @@ import ModalComponent from "./ModalComponent";
 import Box from '@mui/material/Box';
 interface ViewAppointmentNotesComponentProps {
     show: boolean;
-    doctorName: string;
     appointmentNotes: any;
     onClose: any;
 }
 
 const ViewAppointmentNotesComponent: React.FC<
     ViewAppointmentNotesComponentProps
-> = ({ show, doctorName, appointmentNotes, onClose }) => {
+> = ({ show, appointmentNotes, onClose }) => {
     return (
         <>
             <ModalComponent
@@ -40,7 +39,7 @@ const ViewAppointmentNotesComponent: React.FC<
                                     variant="body2"
                                     sx={{
                                         alignSelf:
-                                            msg.name === doctorName ? "flex-end" : "flex-start",
+                                            msg.role === "doctor" ? "flex-end" : "flex-start",
                                     }}
                                 >{`${msg.name} ${dayjs(msg.createdAt).format(
                                     "DD-MM-YYYY hh:mm"
@@ -51,10 +50,10 @@ const ViewAppointmentNotesComponent: React.FC<
                                         p: 1.5,
                                         maxWidth: "75%",
                                         alignSelf:
-                                            msg.name === doctorName ? "flex-end" : "flex-start",
+                                            msg.role === "doctor" ? "flex-end" : "flex-start",
                                         bgcolor:
-                                            msg.name === doctorName ? "primary.main" : "grey.300",
-                                        color: msg.name === doctorName ? "white" : "black",
+                                            msg.role === "doctor" ? "primary.main" : "grey.300",
+                                        color: msg.role === "doctor" ? "white" : "black",
                                         borderRadius: 2,
                                     }}
                                 >
