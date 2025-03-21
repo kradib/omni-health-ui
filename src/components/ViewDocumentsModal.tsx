@@ -7,6 +7,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { downloadFile } from "../api/document";
 import { downloadFileFromResponse } from "../utils/Utils";
 import ModalComponent from "./ModalComponent";
+import dayjs from "dayjs";
 
 interface ViewDocumentsModalProps {
     show: boolean;
@@ -49,6 +50,9 @@ const ViewDocumentsModal: React.FC<ViewDocumentsModalProps> = ({
                         >
                             <Typography variant="body1">{doc.documentName}</Typography>
                         </Stack>
+                        <Typography variant="body1">
+                            {dayjs(doc.dateUploaded).format("DD-MM-YYYY")}
+                        </Typography>
                         <IconButton
                             sx={{ color: theme.palette.primary.main }}
                             onClick={() => handleDownloadDocument(doc.id)}
