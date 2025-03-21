@@ -151,7 +151,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
 
                 <FormInput
                     control={control}
-                    rules={{ required: "First name is required" }}
+                    rules={{}}
                     name="bloodGroup"
                     label="Blood Group"
                     disabled
