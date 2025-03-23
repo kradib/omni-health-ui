@@ -60,6 +60,12 @@ export const BLOOD_GROUP_TYPES = [
   "Others",
 ];
 
+export const GENDER_OPTIONS = [
+  "MALE",
+  "FEMALE",
+  "OTHERS"
+]
+
 export const PENDING_APPOINTMENT_STATUS = "Pending";
 export const PAST_DUE_APPOINTMENT_STATUS = "Past due";
 export const COMPLETED_APPOINTMENT_STATUS = "Completed";

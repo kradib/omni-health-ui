@@ -58,7 +58,19 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                                 {title}
                             </Typography>
                         </Stack>
-                        {children}
+                        <Box
+                            sx={{
+                                maxHeight: "90vh",
+                                overflowY: "auto",
+                                scrollbarWidth: "none", // Hide scrollbar for Firefox
+                                "&::-webkit-scrollbar": {
+                                    display: "none", // Hide scrollbar for Webkit browsers (Chrome, Edge, Safari)
+                                },
+                                p: 1,
+                            }}
+                        >
+                            <Stack spacing={2}> {children} </Stack>
+                        </Box>
                     </Stack>
                 </Box>
             </Modal>

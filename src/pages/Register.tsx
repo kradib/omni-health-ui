@@ -4,7 +4,11 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { useState } from "react";
-import { BLOOD_GROUP_TYPES, RouteConstants } from "../Constants";
+import {
+    BLOOD_GROUP_TYPES,
+    GENDER_OPTIONS,
+    RouteConstants,
+} from "../Constants";
 import { signupUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
@@ -107,6 +111,15 @@ const Register = () => {
 
                         <FormInput
                             control={control}
+                            rules={{ required: "Gender is required" }}
+                            name="gender"
+                            label="Gender"
+                            type="options"
+                            options={GENDER_OPTIONS}
+                        />
+
+                        <FormInput
+                            control={control}
                             rules={{
                                 required: "Email id is required",
                                 pattern: {
@@ -166,7 +179,9 @@ const Register = () => {
                                     message: "Height must be at most 300 cm",
                                 },
                                 validate: (value: any) =>
-                                    !value || (Number.isInteger(Number(value)) || "Must be a whole number"),
+                                    !value ||
+                                    Number.isInteger(Number(value)) ||
+                                    "Must be a whole number",
                             }}
                             type="number"
                             name="height"

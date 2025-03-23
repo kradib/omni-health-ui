@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { updateUser } from "../api/user";
 import { useForm } from "react-hook-form";
 import FormInput from "./FormInput";
-import { USER_DETAILS_KEY } from "../Constants";
+import { GENDER_OPTIONS, USER_DETAILS_KEY } from "../Constants";
 import dayjs from "dayjs";
 interface UpdateProfileModalProps {
     show: boolean;
@@ -65,6 +65,16 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
                     rules={{ required: "Last name is required" }}
                     name="lastName"
                     label="Last Name"
+                />
+
+                <FormInput
+                    control={control}
+                    rules={{ required: "Gender is required" }}
+                    name="gender"
+                    label="Gender"
+                    type="options"
+                    options={GENDER_OPTIONS}
+                    disabled
                 />
 
                 <FormInput

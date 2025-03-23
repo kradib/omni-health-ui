@@ -50,12 +50,14 @@ const FormInput: React.FC<FormInputProps> = ({
                                 id={name}
                                 options={options}
                                 onChange={(_, newValue) => field.onChange(newValue)}
+                                disabled={disabled}
                                 renderInput={(params) => (
                                     <TextField
                                         {...field}
                                         {...params}
                                         label={label}
                                         variant="outlined"
+                                        required={rules.required}
                                     />
                                 )}
                                 value={field.value}
@@ -75,7 +77,7 @@ const FormInput: React.FC<FormInputProps> = ({
                                             required: rules.required,
                                             error: !!fieldState.error,
                                             helperText: fieldState.error?.message || "",
-                                            disabled: disabled
+                                            disabled: disabled,
                                         },
                                     }}
                                 />
